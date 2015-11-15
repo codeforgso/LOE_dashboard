@@ -3,11 +3,9 @@
 // Copyright 2013-2015 thoughtbot, inc.
 // MIT License
 
+//@import "reset";
 @import "variables";
-
-// Neat Settings -- uncomment if using Neat -- must be imported before Neat
-// @import "grid-settings";
-
+@import "grid-settings";
 @import "buttons";
 @import "forms";
 @import "lists";

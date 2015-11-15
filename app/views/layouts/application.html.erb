@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>LoeDashboard</title>
+  <title>City of Greensboro | LOE Dashboard</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 </head>
 <body>
 
-<%= yield %>
+<%= render "shared/header" %>
+
+<div class="wrapper">
+  <%= yield %>
+</div>
 
 </body>
 </html>
