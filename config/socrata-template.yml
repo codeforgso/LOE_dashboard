@@ -1,4 +1,7 @@
 # Socrata settings
+#
+# You should mofify this file with your app_token and
+# save it as config/socrata.yml
 default: &default
   datasets:
   - id: 4h79-gcxp
