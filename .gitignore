@@ -18,3 +18,5 @@
 
 # Ignore Socrata config file
 config/socrata.yml
+cacert.pem
+config/initializers/soda-ruby.rb
