@@ -15,6 +15,7 @@ gem 'font-awesome-rails',     '~> 4.3.0.0'
 gem 'nav_lynx',               '~> 1.1.1'
 gem 'figaro',                 '~> 1.1.0'
 gem 'metamagic',              '~> 3.1.6'
+gem 'soda-ruby', :require => 'soda'
 
 # Assets
 gem 'bourbon';

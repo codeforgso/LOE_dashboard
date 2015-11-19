@@ -1,0 +1,24 @@
+# Socrata settings
+default: &default
+  datasets:
+  - id: 4h79-gcxp
+    name: LOE All Inspections
+  - id: 26hs-mxmu
+    name: LOE All Violations
+  - id: whix-gx4j
+    name: LOE All Cases
+  - id: v5t4-gjta
+    name: LOE Case History
+  domain: data.greensboro-nc.gov
+
+development:
+  <<: *default
+  app_token: YOUR_APP_TOKEN
+
+test:
+  <<: *default
+  app_token: YOUR_APP_TOKEN
+
+production:
+  <<: *default
+  app_token: YOUR_APP_TOKEN
