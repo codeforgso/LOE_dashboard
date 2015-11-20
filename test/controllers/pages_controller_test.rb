@@ -6,6 +6,7 @@ class PagesControllerTest < ActionController::TestCase
     assert_select "header.main > a[href='/']", text: 'Home'
     assert_select "a[href='#{inspections_path}']", text: 'Browse Inspections'
     assert_select "a[href='#{violations_path}']", text: 'Browse Violations'
+    assert_select "a[href='#{cases_path}']", text: 'Browse Cases'
   end
 
 end
