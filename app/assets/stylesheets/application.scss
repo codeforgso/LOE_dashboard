@@ -9,3 +9,9 @@
 
 // Custom
 @import "custom/layout";
+
+// progress bars for turbolinks
+html.turbolinks-progress-bar::before {
+  background-color: #3a81f0 !important;
+  height: 2px !important;
+}
