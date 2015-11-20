@@ -1,0 +1,18 @@
+<h1>Listing Cases</h1>
+<table>
+  <thead>
+    <th>Case Number</th>
+    <th>Entry Date</th>
+    <th>Case Notes</th>
+  </thead>
+  <tbody>
+    <% @cases.compact.each do |item| %>
+      <tr data-item-number="<%= item.case_number -%>">
+        <td><%= link_to item.case_number, {action: :show, id: item.case_number} %></td>
+        <td><%= Date.parse(item.entry_date) %></td>
+        <td><%= item.case_notes %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<div><%= paginate @cases %></div>

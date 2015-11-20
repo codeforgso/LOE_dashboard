@@ -16,6 +16,7 @@ gem 'nav_lynx',               '~> 1.1.1'
 gem 'figaro',                 '~> 1.1.0'
 gem 'metamagic',              '~> 3.1.6'
 gem 'soda-ruby',              :require => 'soda'
+gem 'kaminari'
 
 # Assets
 gem 'bourbon';

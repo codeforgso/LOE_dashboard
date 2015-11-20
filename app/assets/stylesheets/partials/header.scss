@@ -3,3 +3,11 @@ header.main {
   padding: $base-spacing;
   color: #fff;
 }
+
+header.main > h2 {
+  display: inline;
+}
+
+header.main > a {
+  float: right;
+}

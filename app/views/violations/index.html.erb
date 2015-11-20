@@ -1,0 +1,18 @@
+<h1>Listing Violations</h1>
+<table>
+  <thead>
+    <th>Case Number</th>
+    <th>Issued Date</th>
+    <th>Description</th>
+  </thead>
+  <tbody>
+    <% @violations.compact.each do |violation| %>
+      <tr data-case-number="<%= violation.case_number -%>">
+        <td><%= link_to violation.case_number, {action: :show, id: violation.case_number} %></td>
+        <td><%= Date.parse(violation.issued_date) %></td>
+        <td><%= violation.violation_description %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<div><%= paginate @violations %></div>

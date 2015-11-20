@@ -1,0 +1,18 @@
+<h1>Listing Inspections</h1>
+<table>
+  <thead>
+    <th>Case Number</th>
+    <th>Inspection Date</th>
+    <th>Description</th>
+  </thead>
+  <tbody>
+    <% @inspections.compact.each do |inspection| %>
+      <tr data-case-number="<%= inspection.case_number -%>">
+        <td><%= link_to inspection.case_number, {action: :show, id: inspection.case_number} %></td>
+        <td><%= Date.parse(inspection.inspection_date) %></td>
+        <td><%= inspection.inspection_type_desc %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<div><%= paginate @inspections %></div>
