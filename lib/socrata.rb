@@ -22,7 +22,7 @@ class Socrata
     get_dataset_id_by_name 'LOE Case History'
   end
 
-  def paginate(dataset_id,page)
+  def paginate(dataset_id,page,opts={})
     # make sure page is a Fixnum, but don't let nil
     # values get converted to zero.
     page ||= 1
@@ -38,11 +38,10 @@ class Socrata
     arr += Array.new([(page - 1) * Kaminari.config.default_per_page, 0].max)
 
     # options for querying Socrata
-    opts = {
+    opts.merge({
       '$limit': Kaminari.config.default_per_page,
-      '$order': 'inspection_date, case_number',
       '$offset': (page - 1) * Kaminari.config.default_per_page
-    }
+    })
 
     # add the page being viewed to arr
     arr += client.get(dataset_id, opts)
