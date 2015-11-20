@@ -4,6 +4,7 @@ class PagesControllerTest < ActionController::TestCase
     get :index
     assert_response :success
     assert_select "header.main > a[href='/']", text: 'Home'
+    assert_select "a[href='#{inspections_path}']", text: 'Browse Inspections'
   end
 
 end
