@@ -1,4 +1,5 @@
 <h1>Case Detail</h1>
 <pre><%= @case.to_yaml %></pre>
 <%= link_to 'Case Inspections', inspections_path(filters: {'case': @case.case_number}) %><br />
+<%= link_to 'Case Violations', violations_path(filters: {'case': @case.case_number}) %><br />
 <%= link_to 'Browse Cases', cases_path %>
