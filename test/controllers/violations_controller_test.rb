@@ -5,8 +5,8 @@ class ViolationsControllerTest < ActionController::TestCase
   include ViolationsHelper
 
   test "should get index" do
+    socrata = Socrata.new
     [false,true].each do |filter_by_case|
-      socrata = Socrata.new
       params = {}
       if filter_by_case
         violation = socrata.client.get(socrata.violation_dataset_id,{'$limit': 1}).first

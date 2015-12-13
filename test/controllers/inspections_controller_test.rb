@@ -5,8 +5,8 @@ class InspectionsControllerTest < ActionController::TestCase
   include InspectionsHelper
 
   test "should get index" do
+    socrata = Socrata.new
     [false,true].each do |filter_by_case|
-      socrata = Socrata.new
       params = {}
       if filter_by_case
         expected = socrata.client.get(socrata.case_dataset_id, {'$limit': 1}).first
