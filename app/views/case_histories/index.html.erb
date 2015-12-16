@@ -7,8 +7,8 @@
   </thead>
   <tbody>
     <% @case_histories.compact.each do |case_history| %>
-      <tr data-case-number="<%= case_history.case_number -%>">
-        <td><%= link_to case_history.case_number, {action: :show, id: case_history.case_number} %></td>
+      <tr data-unique-id="<%= unique_case_history_id case_history -%>">
+        <td><%= link_to "#{case_history.case_number} - ##{case_history.case_history_sakey}", case_history_path(unique_case_history_id(case_history)) %></td>
         <td><%= Date.parse(case_history.date) %></td>
         <td><%= case_history.action %></td>
       </tr>

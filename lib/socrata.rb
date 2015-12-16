@@ -47,7 +47,11 @@ class Socrata
     arr += client.get(dataset_id, opts)
 
     # if there are more pages after the current one, add more nil values
-    total_record_count = client.get(dataset_id,{'$select': 'count(*)'})[0]['count'].to_i
+    opts2 = {'$select': 'count(*)'}
+    if opts['$where']
+      opts2['$where'] = opts['$where']
+    end
+    total_record_count = client.get(dataset_id, opts2)[0]['count'].to_i
     if total_record_count > page * Kaminari.config.default_per_page
       arr += Array.new([total_record_count - (page * Kaminari.config.default_per_page), 0].max)
     end

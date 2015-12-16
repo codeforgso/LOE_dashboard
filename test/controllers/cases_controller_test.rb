@@ -10,8 +10,7 @@ class CasesControllerTest < ActionController::TestCase
     assert_select "table tbody" do
       assigns['cases'].each do |item|
         assert_select "tr[data-item-number='#{item.case_number}']" do
-          expected_url = "/cases/#{item.case_number}"
-          assert_select "td a[href='#{expected_url}']", text: item.case_number
+          assert_select "td a[href='#{case_path(item.case_number)}']", text: item.case_number
         end
       end
     end
@@ -25,6 +24,9 @@ class CasesControllerTest < ActionController::TestCase
     assert_response :success
     assert assigns['case'].kind_of?(Hashie::Mash)
     assert_equal expected.case_number, assigns['case'].case_number
+    assert_select "a[href='#{inspections_path(filters: {'case': assigns['case'].case_number})}']", text: 'Case Inspections'
+    assert_select "a[href='#{violations_path(filters: {'case': assigns['case'].case_number})}']", text: 'Case Violations'
+    assert_select "a[href='#{case_histories_path(filters: {'case': assigns['case'].case_number})}']", text: 'Case Histories'
     assert_select "a[href='#{cases_path}']"
   end
 

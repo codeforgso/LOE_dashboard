@@ -1,3 +1,4 @@
 <h1>Case History Detail</h1>
 <pre><%= @case_history.to_yaml %></pre>
+<%= link_to 'View Case', case_path(@case_history.case_number) %><br />
 <%= link_to 'Browse Case Histories', case_histories_path %>

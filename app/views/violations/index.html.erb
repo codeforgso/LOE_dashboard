@@ -7,8 +7,8 @@
   </thead>
   <tbody>
     <% @violations.compact.each do |violation| %>
-      <tr data-case-number="<%= violation.case_number -%>">
-        <td><%= link_to violation.case_number, {action: :show, id: violation.case_number} %></td>
+      <tr data-unique-id="<%= unique_violation_id(violation) -%>">
+        <td><%= link_to violation.case_number, violation_path(unique_violation_id(violation)) %></td>
         <td><%= Date.parse(violation.issued_date) %></td>
         <td><%= violation.violation_description %></td>
       </tr>

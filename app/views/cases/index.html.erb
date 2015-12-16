@@ -8,7 +8,7 @@
   <tbody>
     <% @cases.compact.each do |item| %>
       <tr data-item-number="<%= item.case_number -%>">
-        <td><%= link_to item.case_number, {action: :show, id: item.case_number} %></td>
+        <td><%= link_to item.case_number, case_path(item.case_number) %></td>
         <td><%= Date.parse(item.entry_date) %></td>
         <td><%= item.case_notes %></td>
       </tr>
