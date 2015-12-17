@@ -23,6 +23,9 @@ gem 'bourbon';
 gem 'neat';
 gem 'bitters';
 
+# redis
+gem 'redis-rails'
+
 group :development, :test do
   gem 'byebug'
   gem 'web-console', '~> 2.0'
