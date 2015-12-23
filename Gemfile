@@ -37,6 +37,8 @@ group :development, :test do
   gem 'guard-livereload'
   gem 'guard-ctags-bundler'
   gem 'guard-puma'
+  gem 'factory_girl_rails', '~> 4.0'
+  gem 'faker'
 end
 
 group :production do
