@@ -11,10 +11,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151220155713) do
+ActiveRecord::Schema.define(version: 20151223025229) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "inspections", force: :cascade do |t|
+    t.integer  "loe_case_id"
+    t.string   "ad_st_apt"
+    t.string   "ad_st_name"
+    t.string   "ad_st_num"
+    t.string   "ad_st_type"
+    t.integer  "case_number"
+    t.integer  "case_sakey"
+    t.string   "compliant"
+    t.datetime "entry_date"
+    t.datetime "inspection_date"
+    t.text     "inspection_notes"
+    t.integer  "inspection_sakey"
+    t.string   "inspection_type"
+    t.string   "inspection_type_desc"
+    t.string   "inspector"
+    t.datetime "last_update"
+    t.string   "open_and_vacant"
+    t.string   "unfounded"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
 
   create_table "loe_cases", force: :cascade do |t|
     t.string   "ad_lot"

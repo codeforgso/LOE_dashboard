@@ -6,10 +6,10 @@
     <th>Description</th>
   </thead>
   <tbody>
-    <% @inspections.compact.each do |inspection| %>
-      <tr data-unique-id="<%= unique_inspection_id(inspection) -%>">
-        <td><%= link_to inspection.case_number, inspection_path(unique_inspection_id(inspection)) %></td>
-        <td><%= Date.parse(inspection.inspection_date) %></td>
+    <% @inspections.each do |inspection| %>
+      <tr data-id="<%= inspection.id -%>">
+        <td><%= link_to inspection.case_number, inspection_path(inspection) %></td>
+        <td><%= inspection.inspection_date %></td>
         <td><%= inspection.inspection_type_desc %></td>
       </tr>
     <% end %>

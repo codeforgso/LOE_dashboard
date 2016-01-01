@@ -5,7 +5,8 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
-[LoeCase].each do |klass|
+
+[LoeCase, Inspection].each do |klass|
   puts "\nseeding #{klass}..."
   klass.seed
   print "done"

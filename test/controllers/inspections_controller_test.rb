@@ -5,21 +5,27 @@ class InspectionsControllerTest < ActionController::TestCase
   include InspectionsHelper
 
   test "should get index" do
-    socrata = Socrata.new
+    expected_count = Kaminari.config.default_per_page
     [false,true].each do |filter_by_case|
       params = {}
+      opts = {}
       if filter_by_case
-        expected = socrata.client.get(socrata.case_dataset_id, {'$limit': 1}).first
-        params[:filters] = {'case': expected.case_number}
+        expected = create(:loe_case)
+        params[:filters] = {'case': expected.id}
+        opts[:loe_case_id] = expected.id
+      end
+      expected_count.times do
+        create :inspection, opts
       end
       get :index, params
       assert_response :success
-      assert assigns['inspections'].kind_of?(Array)
+      assert assigns['inspections'].kind_of?(Inspection::ActiveRecord_Relation)
       assert_not_equal 0, assigns['inspections'].size
+      assert_equal expected_count, assigns['inspections'].size
       assert_select "table tbody" do
         assigns['inspections'].each do |inspection|
-          assert_select "tr[data-unique-id='#{unique_inspection_id(inspection)}']" do
-            assert_select "td a[href='#{inspection_path(unique_inspection_id(inspection))}']", text: inspection.case_number
+          assert_select "tr[data-id='#{inspection.id}']" do
+            assert_select "td a[href='#{inspection_path(inspection.id)}']", text: inspection.case_number.to_s
             if filter_by_case
               assert_equal expected.case_number, inspection.case_number
             end
@@ -30,13 +36,12 @@ class InspectionsControllerTest < ActionController::TestCase
   end
 
   test "should get show" do
-    socrata = Socrata.new
-    expected = socrata.client.get(socrata.inspection_dataset_id, {'$limit': 1}).first
-    get :show, {id: unique_inspection_id(expected)}
+    expected = create(:inspection)
+    get :show, {id: expected.id}
     assert_response :success
-    assert assigns['inspection'].kind_of?(Hashie::Mash)
+    assert assigns['inspection'].kind_of?(Inspection)
     assert_equal expected.case_number, assigns['inspection'].case_number
-    assert_select "a[href='#{case_path(assigns['inspection'].case_number)}']", text: 'View Case'
+    assert_select "a[href='#{case_path(assigns['inspection'].loe_case_id)}']", text: 'View Case'
     assert_select "a[href='#{inspections_path}']"
   end
 

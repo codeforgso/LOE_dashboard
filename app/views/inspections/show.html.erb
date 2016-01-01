@@ -1,4 +1,4 @@
 <h1>Inspection Detail</h1>
 <pre><%= @inspection.to_yaml %></pre>
-<%= link_to 'View Case', case_path(@inspection.case_number) %><br />
+<%= link_to 'View Case', case_path(@inspection.loe_case_id) %><br />
 <%= link_to 'Browse Inspections', inspections_path %>
