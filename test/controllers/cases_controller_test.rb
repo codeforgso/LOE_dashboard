@@ -28,7 +28,7 @@ class CasesControllerTest < ActionController::TestCase
     assert assigns['case'].kind_of?(LoeCase)
     assert_equal expected.case_number, assigns['case'].case_number
     assert_select "a[href='#{inspections_path(filters: {'case': assigns['case'].id})}']", text: 'Case Inspections'
-    assert_select "a[href='#{violations_path(filters: {'case': assigns['case'].case_number})}']", text: 'Case Violations'
+    assert_select "a[href='#{violations_path(filters: {'case': assigns['case'].id})}']", text: 'Case Violations'
     assert_select "a[href='#{case_histories_path(filters: {'case': assigns['case'].case_number})}']", text: 'Case Histories'
     assert_select "a[href='#{cases_path}']"
   end

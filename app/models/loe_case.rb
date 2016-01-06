@@ -2,6 +2,7 @@ require File.expand_path(Rails.root)+'/lib/socrata'
 class LoeCase < ActiveRecord::Base
 
   has_many :inspections, -> { order(:case_sakey) }
+  has_many :violations, -> { order(:case_sakey) }
 
   def self.seed
     Socrata.seed self, Socrata.case_dataset_id

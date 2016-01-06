@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151223025229) do
+ActiveRecord::Schema.define(version: 20160104015640) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -72,6 +72,36 @@ ActiveRecord::Schema.define(version: 20151223025229) do
     t.string   "zoning"
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
+  end
+
+  create_table "violations", force: :cascade do |t|
+    t.integer  "loe_case_id"
+    t.string   "ad_st_name"
+    t.string   "ad_st_num"
+    t.string   "ad_st_type"
+    t.integer  "case_number"
+    t.integer  "case_sakey"
+    t.datetime "clear_date"
+    t.string   "cleared_by"
+    t.datetime "entry_date"
+    t.string   "issued_by"
+    t.datetime "issued_date"
+    t.datetime "last_update"
+    t.integer  "number_of_items"
+    t.datetime "reissue_date"
+    t.string   "reissued_by"
+    t.string   "violation_cleared"
+    t.string   "violation_code"
+    t.string   "violation_description"
+    t.string   "violation_issued"
+    t.string   "violation_reissued"
+    t.integer  "violation_sakey"
+    t.string   "major_violation"
+    t.string   "responsible_party"
+    t.text     "comments"
+    t.string   "ad_st_apt"
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
   end
 
 end
