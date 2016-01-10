@@ -1,6 +1,11 @@
 require 'test_helper'
 
 class InspectionTest < ActiveSupport::TestCase
+
+  test "constants" do
+    assert_socrata_attribute_remapping Inspection
+  end
+
   test "factories" do
     inspection = build :inspection
     assert_kind_of Inspection, inspection
