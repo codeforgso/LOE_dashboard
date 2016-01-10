@@ -2,6 +2,10 @@ require 'test_helper'
 
 class ViolationTest < ActiveSupport::TestCase
 
+  test "constants" do
+    assert_socrata_attribute_remapping Violation
+  end
+
   test "factories" do
     violation = build :violation
     assert_kind_of Violation, violation

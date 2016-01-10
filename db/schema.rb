@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160110144459) do
+ActiveRecord::Schema.define(version: 20160110172343) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -119,6 +119,12 @@ ActiveRecord::Schema.define(version: 20160110144459) do
     t.string   "ad_st_apt"
     t.datetime "created_at",            null: false
     t.datetime "updated_at",            null: false
+    t.string   "stpfxdir"
+    t.string   "stsfxdir"
+    t.string   "st_apt"
+    t.string   "st_name"
+    t.string   "st_number"
+    t.string   "st_type"
   end
 
 end
