@@ -44,7 +44,7 @@ class Violation < ActiveRecord::Base
         case col.to_s
         when "case_sakey", "case_number", "violation_sakey", "number_of_items"
           self[col.to_sym] = socrata_result[key].strip.to_i
-          if key == "case_number"
+          if col == "case_number"
             self.loe_case_id = LoeCase.where('case_number = ?',self[col.to_sym]).limit(1).select('id').first.try(:id)
           end
         when "clear_date", "entry_date", "last_update", "issued_date", "reissue_date"
