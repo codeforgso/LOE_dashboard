@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160104015640) do
+ActiveRecord::Schema.define(version: 20160109012741) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -72,6 +72,17 @@ ActiveRecord::Schema.define(version: 20160104015640) do
     t.string   "zoning"
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
+    t.string   "city"
+    t.text     "full_address"
+    t.string   "state"
+    t.string   "stpfxdir"
+    t.string   "stsfxdir"
+    t.string   "st_apt"
+    t.string   "st_name"
+    t.string   "st_number"
+    t.string   "st_type"
+    t.float    "x_coord"
+    t.float    "y_coord"
   end
 
   create_table "violations", force: :cascade do |t|

@@ -1,5 +1,10 @@
 require 'test_helper'
 class LoeCaseTest < ActiveSupport::TestCase
+
+  test "constants" do
+    assert_socrata_attribute_remapping LoeCase
+  end
+
   test "factories" do
     loe_case = build :loe_case
     assert_kind_of LoeCase, loe_case
