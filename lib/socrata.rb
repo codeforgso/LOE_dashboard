@@ -2,24 +2,40 @@ class Socrata
   CONFIG_FILE = File.expand_path(Rails.root)+"/config/socrata.yml"
   attr_reader :client
 
-  def datasets
+  def self.datasets
     settings["datasets"]
   end
 
-  def inspection_dataset_id
+  def self.inspection_dataset_id
     get_dataset_id_by_name 'LOE All Inspections'
   end
 
-  def violation_dataset_id
+  def self.violation_dataset_id
     get_dataset_id_by_name 'LOE All Violations'
   end
 
-  def case_dataset_id
+  def self.case_dataset_id
     get_dataset_id_by_name 'LOE All Cases'
   end
 
-  def case_history_dataset_id
+  def self.case_history_dataset_id
     get_dataset_id_by_name 'LOE Case History'
+  end
+
+  def inspection_dataset_id
+    self.class.inspection_dataset_id
+  end
+
+  def violation_dataset_id
+    self.class.violation_dataset_id
+  end
+
+  def case_dataset_id
+    self.class.case_dataset_id
+  end
+
+  def case_history_dataset_id
+    self.class.case_history_dataset_id
   end
 
   def paginate(dataset_id,page,opts={})
@@ -60,18 +76,38 @@ class Socrata
     Kaminari.paginate_array(arr).page(page)
   end
 
+  def self.seed(klass,dataset_id)
+    klass.delete_all
+    socrata = self.new
+    total_record_count = socrata.client.get(dataset_id, {'$select' => 'count(*)'})[0]['count'].to_i || 0
+    batch_size = 1000
+    (total_record_count/batch_size.to_f).ceil.times do |n|
+      opts = {
+        '$limit' => batch_size,
+        '$offset' => n * batch_size
+      }
+      socrata.client.get(dataset_id,opts).each do |socrata_item|
+        item = klass.new
+        item.assign_from_socrata socrata_item
+        item.save!
+        print "."
+      end
+      print "*"
+    end
+  end
+
   private
 
   def initialize
-    @client = SODA::Client.new({domain: settings["domain"], app_token: settings["app_token"]})
+    @client = SODA::Client.new({domain: self.class.settings["domain"], app_token: self.class.settings["app_token"]})
   end
 
-  def settings
+  def self.settings
     require 'yaml'
-    YAML::load(File.open(self.class::CONFIG_FILE).read)[Rails.env]
+    YAML::load(File.open(CONFIG_FILE).read)[Rails.env]
   end
 
-  def get_dataset_id_by_name(name)
+  def self.get_dataset_id_by_name(name)
     datasets.each do |dataset|
       if dataset['name'] == name
         return dataset['id']

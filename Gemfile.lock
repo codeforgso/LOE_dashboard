@@ -82,6 +82,13 @@ GEM
     erubis (2.7.0)
     eventmachine (1.0.8)
     execjs (2.6.0)
+    factory_girl (4.5.0)
+      activesupport (>= 3.0.0)
+    factory_girl_rails (4.5.0)
+      factory_girl (~> 4.5.0)
+      railties (>= 3.0.0)
+    faker (1.6.1)
+      i18n (~> 0.5)
     ffi (1.9.10)
     figaro (1.1.1)
       thor (~> 0.14)
@@ -278,6 +285,8 @@ DEPENDENCIES
   bourbon
   byebug
   coffee-rails (~> 4.1.0)
+  factory_girl_rails (~> 4.0)
+  faker
   figaro (~> 1.1.0)
   font-awesome-rails (~> 4.3.0.0)
   guard

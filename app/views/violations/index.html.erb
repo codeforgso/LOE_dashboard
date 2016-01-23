@@ -6,10 +6,10 @@
     <th>Description</th>
   </thead>
   <tbody>
-    <% @violations.compact.each do |violation| %>
-      <tr data-unique-id="<%= unique_violation_id(violation) -%>">
-        <td><%= link_to violation.case_number, violation_path(unique_violation_id(violation)) %></td>
-        <td><%= Date.parse(violation.issued_date) %></td>
+    <% @violations.each do |violation| %>
+      <tr data-id="<%= violation.id -%>">
+        <td><%= link_to violation.case_number, violation_path(violation) %></td>
+        <td><%= violation.issued_date %></td>
         <td><%= violation.violation_description %></td>
       </tr>
     <% end %>

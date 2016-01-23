@@ -6,11 +6,11 @@
     <th>Case Notes</th>
   </thead>
   <tbody>
-    <% @cases.compact.each do |item| %>
-      <tr data-item-number="<%= item.case_number -%>">
-        <td><%= link_to item.case_number, case_path(item.case_number) %></td>
-        <td><%= Date.parse(item.entry_date) %></td>
-        <td><%= item.case_notes %></td>
+    <% @cases.each do |loe_case| %>
+      <tr data-id="<%= loe_case.id -%>">
+        <td><%= link_to loe_case.case_number, case_path(loe_case) %></td>
+        <td><%= loe_case.entry_date.try :localtime %></td>
+        <td><%= loe_case.case_notes %></td>
       </tr>
     <% end %>
   </tbody>

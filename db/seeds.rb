@@ -5,3 +5,13 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+[LoeCase, Inspection, Violation].each do |klass|
+  puts "\nseeding #{klass}..."
+  klass.seed
+  print "done"
+end
+
+puts "\nclearing cache..."
+Rails.cache.clear
+print "done"
