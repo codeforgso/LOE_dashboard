@@ -24,4 +24,25 @@ class LoeCaseTest < ActiveSupport::TestCase
     loe_case.assign_from_socrata item
     assert_kind_of Fixnum, loe_case.case_number
   end
+
+  test "scopes" do
+    total_count = 10
+    total_count.times do |n|
+      create :loe_case, :entry_date => (n%2==0 ? Date.today : Date.today.next).to_time
+    end
+
+    # case_number
+    LoeCase.all.each do |expected|
+      actual = LoeCase.case_number(expected.case_number)
+      assert_equal 1, actual.size
+      assert_equal actual[0].case_number, expected.case_number
+    end
+
+    # entry_date
+    actual = LoeCase.entry_date(Date.today.to_s)
+    assert_equal total_count/2, actual.size
+    actual.each do |loe_case|
+      assert_equal Date.today, loe_case.entry_date.to_date
+    end
+  end
 end
