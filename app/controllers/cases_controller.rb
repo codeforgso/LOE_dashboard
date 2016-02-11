@@ -2,7 +2,10 @@ require File.expand_path(Rails.root)+'/lib/socrata'
 class CasesController < ApplicationController
 
   def index
-    @cases = LoeCase.all.order('entry_date, case_number').page params[:page]
+    params[:filters] ||= {}
+    @cases = LoeCase.filter(params[:filters].slice(:case_number, :entry_date))
+      .order('entry_date, case_number')
+      .page params[:page]
   end
 
   def show

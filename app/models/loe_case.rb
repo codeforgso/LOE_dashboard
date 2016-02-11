@@ -1,5 +1,6 @@
 require File.expand_path(Rails.root)+'/lib/socrata'
 class LoeCase < ActiveRecord::Base
+  include Filterable
 
   SOCRATA_ATTRIBUTE_REMAPPING = {
     "adlot" => "ad_lot",
@@ -36,6 +37,19 @@ class LoeCase < ActiveRecord::Base
 
   has_many :inspections, -> { order(:case_sakey) }
   has_many :violations, -> { order(:case_sakey) }
+
+  scope :case_number, -> (case_number) { where case_number: case_number }
+  scope :entry_date, -> (entry_date) do
+    begin
+      if d = Date.parse(entry_date)
+        where("entry_date >= ? and entry_date < ?", d.to_time, d.next.to_time)
+      else
+        none
+      end
+    rescue
+      none
+    end
+  end
 
   def self.seed
     Socrata.seed self, Socrata.case_dataset_id

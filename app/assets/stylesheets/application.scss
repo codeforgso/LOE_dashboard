@@ -15,3 +15,13 @@ html.turbolinks-progress-bar::before {
   background-color: #3a81f0 !important;
   height: 2px !important;
 }
+
+.no-bold {
+  font-weight: normal !important;
+}
+
+// search filters
+table.search th {
+  text-align: right;
+  padding-right: 10px;
+}

@@ -1,3 +1,18 @@
+<h1>Search Filters</h1>
+<%= form_tag(cases_path, method: :get) do %>
+  <table class="search">
+    <tr>
+      <th>Case Number</th>
+      <td><%= text_field_tag 'filters[case_number]' %></td>
+    </tr>
+    <tr>
+      <th>Entry Date <span class="no-bold">(YYYY-MM-DD)</span></th>
+      <td><%= text_field_tag 'filters[entry_date]' %></td>
+    </tr>
+  </table>
+  <%= submit_tag 'Search' %>
+<% end %>
+<hr />
 <h1>Listing Cases</h1>
 <table>
   <thead>
