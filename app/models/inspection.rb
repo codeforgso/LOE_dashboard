@@ -15,7 +15,12 @@ class Inspection < ActiveRecord::Base
     "stapt" => "st_apt",
     "stname" => "st_name",
     "stnumber" => "st_number",
-    "sttype" => "st_type"
+    "sttype" => "st_type",
+    "inspectionid" => "inspection_id",
+    "fulladdress" => "full_address",
+    "xcoord" => "x_coord",
+    "ycoord" => "y_coord",
+    "adsakey" => "ad_sakey"
   }
 
 

@@ -24,7 +24,12 @@ class Violation < ActiveRecord::Base
     "violationdescription" => "violation_description",
     "violationissued" => "violation_issued",
     "violationreissued" => "violation_reissued",
-    "violationsakey" => "violation_sakey"
+    "violationsakey" => "violation_sakey",
+    "violationid" => "violation_id",
+    "fulladdress" => "full_address",
+    "xcoord" => "x_coord",
+    "ycoord" => "y_coord",
+    "adsakey" => "ad_sakey"
   }
 
 
