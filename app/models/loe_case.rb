@@ -39,6 +39,19 @@ class LoeCase < ActiveRecord::Base
   has_many :violations, -> { order(:case_sakey) }
 
   scope :case_number, -> (case_number) { where case_number: case_number }
+  scope :entry_date_range, -> (start_date,end_date) do
+    begin
+      date_start = Date.parse(start_date) || Date.today
+      date_end = Date.parse(end_date) || Date.today
+      if start = Date.parse(start_date)
+        where("entry_date >= ? and entry_date < ?", date_start.to_time, date_end.next.to_time)
+      else
+        none
+      end
+    rescue
+      none
+    end
+  end
   scope :entry_date, -> (entry_date) do
     begin
       if d = Date.parse(entry_date)
