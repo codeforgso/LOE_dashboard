@@ -13,7 +13,8 @@ class CasesControllerTest < ActionController::TestCase
     assert_select "form[action='#{cases_path}'][method=get]" do
       assert_select "table.search" do
         assert_select "input[name='filters[case_number]']"
-        assert_select "input[name='filters[entry_date]']"
+        assert_select "input[name='filters[entry_date_range][start_date]']"
+        assert_select "input[name='filters[entry_date_range][end_date]']"
       end
     end
     assert_select "table tbody" do
@@ -34,12 +35,12 @@ class CasesControllerTest < ActionController::TestCase
     end
   end
 
-  test "should get index filtered for entry_date" do
+  test "should get index filtered for entry_date_range" do
     create_loe_cases Kaminari.config.default_per_page, true
-    get :index, filters: {entry_date: Date.today.to_s}
-    assert_equal Kaminari.config.default_per_page/2, assigns['cases'].size
+    get :index, filters: {entry_date_range: {start_date: Date.today.to_s, end_date: Date.today.next.to_s}}
+    assert_equal Kaminari.config.default_per_page, assigns['cases'].size
     assigns['cases'].each do |loe_case|
-      assert_equal Date.today, loe_case.entry_date.to_date
+      assert [Date.today, Date.today.next].include?(loe_case.entry_date.to_date)
     end
   end
 
