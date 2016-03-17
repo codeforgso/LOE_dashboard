@@ -1,4 +1,4 @@
-class AddStateToTables < ActiveRecord::Migration
+class AddColumnsToTable < ActiveRecord::Migration
   def change
     change_table :inspections do |t|
       t.string :city
