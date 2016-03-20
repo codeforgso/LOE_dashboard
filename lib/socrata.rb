@@ -86,12 +86,14 @@ class Socrata
         '$limit' => batch_size,
         '$offset' => n * batch_size
       }
+      items = []
       socrata.client.get(dataset_id,opts).each do |socrata_item|
         item = klass.new
         item.assign_from_socrata socrata_item
-        item.save!
+        items << item
         print "."
       end
+      klass.import items
       print "*"
     end
   end

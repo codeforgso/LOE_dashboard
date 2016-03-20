@@ -17,6 +17,7 @@ gem 'figaro',                 '~> 1.1.0'
 gem 'metamagic',              '~> 3.1.6'
 gem 'soda-ruby',              :require => 'soda'
 gem 'kaminari'
+gem 'activerecord-import'
 
 # Assets
 gem 'bourbon';
