@@ -6,8 +6,12 @@
       <td><%= text_field_tag 'filters[case_number]' %></td>
     </tr>
     <tr>
-      <th>Entry Date <span class="no-bold">(YYYY-MM-DD)</span></th>
-      <td><%= text_field_tag 'filters[entry_date]' %></td>
+      <th>Entry Date (start) <span class="no-bold">(YYYY-MM-DD)</span></th>
+      <td><%= text_field_tag 'filters[entry_date_range][start_date]' %></td>
+    </tr>
+    <tr>
+      <th>Entry Date (end) <span class="no-bold">(YYYY-MM-DD)</span></th>
+      <td><%= text_field_tag 'filters[entry_date_range][end_date]' %></td>
     </tr>
   </table>
   <%= submit_tag 'Search' %>

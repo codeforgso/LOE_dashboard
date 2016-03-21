@@ -44,5 +44,12 @@ class LoeCaseTest < ActiveSupport::TestCase
     actual.each do |loe_case|
       assert_equal Date.today, loe_case.entry_date.to_date
     end
+
+    # entry_date_range
+    actual = LoeCase.entry_date_range({start_date: Date.today.to_s, end_date: Date.today.next.to_s})
+    assert_equal total_count, actual.size
+    actual.each do |loe_case|
+      assert [Date.today, Date.today.next].include?(loe_case.entry_date.to_date)
+    end
   end
 end

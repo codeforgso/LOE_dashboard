@@ -24,7 +24,12 @@ class Violation < ActiveRecord::Base
     "violationdescription" => "violation_description",
     "violationissued" => "violation_issued",
     "violationreissued" => "violation_reissued",
-    "violationsakey" => "violation_sakey"
+    "violationsakey" => "violation_sakey",
+    "violationid" => "violation_id",
+    "fulladdress" => "full_address",
+    "xcoord" => "x_coord",
+    "ycoord" => "y_coord",
+    "adsakey" => "ad_sakey"
   }
 
 
@@ -51,6 +56,11 @@ class Violation < ActiveRecord::Base
           begin
             if socrata_result[key].strip.match(/^\d+\/\d+\/\d+ \d+:\d+$/)
               self[col.to_sym] = Time.strptime(socrata_result[key].strip,"%m/%d/%Y %H:%M")
+            elsif socrata_result[key].strip.match(/^\d{1,2}\/\d{1,2}\/\d{4} \d{1,2}:\d{2}:\d{2} (a|p)m$/i)
+              self[col.to_sym] = Time.strptime(socrata_result[key].strip.upcase,"%m/%d/%Y %I:%M")
+              if socrata_result[key].strip.match(/pm$/i)
+                self[col.to_sym].advance(hours: 12)
+              end
             else
               self[col.to_sym] = Time.parse(socrata_result[key].strip)
             end
