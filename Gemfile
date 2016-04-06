@@ -40,6 +40,7 @@ group :development, :test do
   gem 'guard-puma'
   gem 'factory_girl_rails', '~> 4.0'
   gem 'faker'
+  gem 'rspec-rails', '~> 3.0'
 end
 
 group :production do
