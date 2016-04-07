@@ -29,7 +29,26 @@ class Violation < ActiveRecord::Base
     "fulladdress" => "full_address",
     "xcoord" => "x_coord",
     "ycoord" => "y_coord",
-    "adsakey" => "ad_sakey"
+    "adsakey" => "ad_sakey",
+    "ownermailzip" => "owner_mailzip",
+    "adlot" => "ad_lot",
+    "closereason" => "close_reason",
+    "ownername" => "owner_name",
+    "ownermailstate" => "owner_mailstate",
+    "casenotes" => "case_notes",
+    "duedate" => 'due_date',
+    "ownermailcity" => "owner_mailcity",
+    "ownermailaddr2" => "owner_mailaddr2",
+    "censustract" => "census_tract",
+    "rentalstatus" => "rental_status",
+    "ownername2" => "owner_name2",
+    "closedate" => "close_date",
+    "usecode" => "use_code",
+    "assignedinspcode" => "assigned_insp_code",
+    "ownermailaddr" => "owner_mailaddr",
+    "casestatus" => "case_status",
+    "casetype" => "case_type",
+    "annexdate" => "annex_date"
   }
 
 
