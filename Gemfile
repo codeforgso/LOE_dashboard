@@ -2,6 +2,11 @@ source 'https://rubygems.org'
 
 gem 'rails', '4.2.1'
 gem 'pg'
+
+# use environmental variables for config and sensitive values
+# Make sure to require this first before any gems that need env variables
+gem 'dotenv-rails', require: 'dotenv/rails-now'
+
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.1.0'

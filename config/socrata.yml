@@ -1,7 +1,4 @@
 # Socrata settings
-#
-# You should mofify this file with your app_token and
-# save it as config/socrata.yml
 default: &default
   datasets:
   - id: 4h79-gcxp
@@ -13,15 +10,13 @@ default: &default
   - id: v5t4-gjta
     name: LOE Case History
   domain: data.greensboro-nc.gov
+  app_token: <%= ENV['SOCRATA_TOKEN'] %>
 
 development:
   <<: *default
-  app_token: YOUR_APP_TOKEN
 
 test:
   <<: *default
-  app_token: YOUR_APP_TOKEN
 
 production:
   <<: *default
-  app_token: YOUR_APP_TOKEN
