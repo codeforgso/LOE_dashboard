@@ -1,20 +1,19 @@
+default: &default
+  adapter: postgresql
+  host: <%= ENV['DB_HOST'] %>
+  username: <%= ENV['DB_USERNAME'] %>
+  pool: 5
+  timeout: 5000
+
 development:
-  adapter:  postgresql
-  database: loedash_dev
-  pool:     5
-  timeout:  5000
-  host:     localhost
+  <<: *default
+  database: <%= ENV['DB_NAME'] %>
 
 test:
-  adapter:  postgresql
+  <<: *default
   database: loedash_test
-  pool:     5
-  timeout:  5000
-  host:     localhost
 
 production:
-  adapter:  postgresql
-  database: loedash_prod
-  pool:     5
-  timeout:  5000
-  host:     localhost
+  <<: *default
+  database: <%= ENV['DB_NAME'] %>
+  password: <%= ENV['DB_PASSWORD'] %>

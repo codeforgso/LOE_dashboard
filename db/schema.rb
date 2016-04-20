@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160316232154) do
+ActiveRecord::Schema.define(version: 20160406233701) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -139,6 +139,28 @@ ActiveRecord::Schema.define(version: 20160316232154) do
     t.float    "x_coord"
     t.float    "y_coord"
     t.integer  "ad_sakey"
+    t.string   "owner_mailzip"
+    t.string   "ad_lot"
+    t.string   "close_reason"
+    t.string   "owner_name"
+    t.string   "owner_mailstate"
+    t.string   "case_notes"
+    t.date     "due_date"
+    t.string   "owner_mailcity"
+    t.string   "zoning"
+    t.string   "owner_mailaddr2"
+    t.string   "census_tract"
+    t.string   "rental_status"
+    t.string   "owner_name2"
+    t.string   "origin"
+    t.date     "close_date"
+    t.string   "use_code"
+    t.string   "assigned_insp_code"
+    t.string   "owner_mailaddr"
+    t.string   "assignment"
+    t.string   "case_status"
+    t.string   "case_type"
+    t.date     "annex_date"
   end
 
 end

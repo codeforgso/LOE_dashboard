@@ -16,7 +16,9 @@
 !/log/.keep
 /tmp
 
-# Ignore Socrata config file
-config/socrata.yml
+# Ignore SSL workaround config files
 cacert.pem
 config/initializers/soda-ruby.rb
+
+# Ignore .env file
+.env

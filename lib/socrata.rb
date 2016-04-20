@@ -106,7 +106,7 @@ class Socrata
 
   def self.settings
     require 'yaml'
-    YAML::load(File.open(CONFIG_FILE).read)[Rails.env]
+    YAML::load(ERB.new(File.open(CONFIG_FILE).read).result)[Rails.env]
   end
 
   def self.get_dataset_id_by_name(name)
