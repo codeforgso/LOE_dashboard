@@ -3,21 +3,25 @@
   <table class="search">
     <tr>
       <th>Case Number</th>
-      <td><%= text_field_tag 'filters[case_number]' %></td>
+      <td><%= text_field_tag 'filters[case_number]', params[:filters][:case_number] %></td>
     </tr>
     <tr>
       <th>Entry Date (start) <span class="no-bold">(YYYY-MM-DD)</span></th>
-      <td><%= text_field_tag 'filters[entry_date_range][start_date]' %></td>
+      <td><%= text_field_tag 'filters[entry_date_range][start_date]', params[:filters][:entry_date_range].try(:start_date) %></td>
     </tr>
     <tr>
       <th>Entry Date (end) <span class="no-bold">(YYYY-MM-DD)</span></th>
-      <td><%= text_field_tag 'filters[entry_date_range][end_date]' %></td>
+      <td><%= text_field_tag 'filters[entry_date_range][end_date]', params[:filters][:entry_date_range].try(:end_date) %></td>
+    </tr>
+    <tr>
+      <th>Street Name</th>
+      <td><%= text_field_tag 'filters[st_name]', params[:filters][:st_name] %></td>
     </tr>
   </table>
   <%= submit_tag 'Search' %>
 <% end %>
 <hr />
-<h1>Listing Cases</h1>
+<h1>Listing Cases <span style="font-weight: normal;">(<%= pluralize(@cases.total_count, 'total record') %>)</span></h1>
 <table>
   <thead>
     <th>Case Number</th>

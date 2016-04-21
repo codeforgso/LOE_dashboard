@@ -41,6 +41,16 @@ RSpec.describe CasesController, type: :controller do
           end
         end
       end
+      describe 'st_name' do
+        let(:st_name) { LoeCase.where('st_name is not ?',nil).sample.st_name }
+        it 'returns results filtered by st_name' do
+          get :index, filters: { st_name: st_name }
+          expect(assigns['cases'].size).to be > 0
+          assigns['cases'].each do |loe_case|
+            expect(loe_case.st_name).to eq(st_name)
+          end
+        end
+      end
     end
   end
 

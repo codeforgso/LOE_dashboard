@@ -3,7 +3,7 @@ class CasesController < ApplicationController
 
   def index
     params[:filters] ||= {}
-    @cases = LoeCase.filter(params[:filters].slice(:case_number, :entry_date_range))
+    @cases = LoeCase.filter(params[:filters].slice(:case_number, :entry_date_range, :st_name))
       .order('entry_date, case_number')
       .page params[:page]
   end

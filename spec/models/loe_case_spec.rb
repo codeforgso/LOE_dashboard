@@ -57,6 +57,30 @@ RSpec.describe LoeCase, type: :model do
         end
       end
     end
+
+    describe 'st_name' do
+      let(:subject) { LoeCase.st_name(st_name) }
+      let(:st_name) { LoeCase.where('st_name is not ?',nil).sample.st_name }
+      it 'returns records with matching :st_name' do
+        expect(st_name).to be_a(String)
+        expect(st_name).not_to eq('')
+        expect(subject.size).to be > 0
+        subject.each do |loe_case|
+          expect(loe_case.st_name).to eq(st_name)
+        end
+      end
+
+      describe 'with lowercased st_name' do
+        let(:subject) { LoeCase.st_name(st_name.downcase) }
+        it 'returns results with case insensitive st_name match' do
+          expect(subject.size).to be > 0
+          subject.each do |loe_case|
+            expect(loe_case.st_name).to eq(st_name)
+            expect(loe_case.st_name).not_to eq(st_name.downcase)
+          end
+        end
+      end
+    end
   end
 
   describe '#assign_from_socrata' do
