@@ -1,15 +1,3 @@
-@import "bourbon";
-@import "base/grid-settings";
-@import "neat";
-@import "base/base";
-@import "font-awesome";
-
-// Partials
-@import "partials/header";
-
-// Custom
-@import "custom/layout";
-
 // progress bars for turbolinks
 html.turbolinks-progress-bar::before {
   background-color: #3a81f0 !important;
