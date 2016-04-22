@@ -4,12 +4,12 @@ RSpec.describe LoeCase, type: :model do
   let(:loe_case) { build(:loe_case) }
   it 'has factories for testing' do
     expect(loe_case).to be_valid
-    expect(!!loe_case.save).to eq(true)
+    expect(loe_case.save!).to eq(true)
   end
 
   describe 'constants' do
     it 'has LoeCase::SOCRATA_ATTRIBUTE_REMAPPING' do
-      assert_socrata_attribute_remapping LoeCase
+      expect(LoeCase).to have_socrata_attribute_remapping
     end
   end
 

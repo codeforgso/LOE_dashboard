@@ -4,14 +4,14 @@ RSpec.describe Inspection, type: :model do
   let(:inspection) { build(:inspection) }
   it 'has factories for testing' do
     expect(inspection).to be_valid
-    expect(!!inspection.save).to eq(true)
+    expect(inspection.save!).to eq(true)
     expect(inspection.loe_case).to be_a(LoeCase)
     expect(inspection.case_number).to eq(inspection.loe_case.case_number)
   end
 
   describe 'constants' do
     it 'has Inspection::SOCRATA_ATTRIBUTE_REMAPPING' do
-      assert_socrata_attribute_remapping Inspection
+      expect(Inspection).to have_socrata_attribute_remapping
     end
   end
 

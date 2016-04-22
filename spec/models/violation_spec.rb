@@ -4,14 +4,14 @@ RSpec.describe Violation, type: :model do
   let(:violation) { build(:violation) }
   it 'has factories for testing' do
     expect(violation).to be_valid
-    expect(!!violation.save).to eq(true)
+    expect(violation.save!).to eq(true)
     expect(violation.loe_case).to be_a(LoeCase)
     expect(violation.loe_case.case_number).to eq(violation.case_number)
   end
 
   describe 'constants' do
     it 'has Violation::SOCRATA_ATTRIBUTE_REMAPPING' do
-      assert_socrata_attribute_remapping Violation
+      expect(Violation).to have_socrata_attribute_remapping
     end
   end
 
