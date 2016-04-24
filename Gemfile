@@ -30,6 +30,7 @@ gem 'redis-rails'
 # Use Bootstrap framework for UI
 gem 'bootstrap-sass'
 gem 'bootstrap-kaminari-views'
+gem 'bootstrap-datepicker-rails'
 
 group :development, :test do
   gem 'byebug'

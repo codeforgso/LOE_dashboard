@@ -14,8 +14,17 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require bootstrap-sprockets
+//= require bootstrap-datepicker/core
 //= require_tree .
 
+var App = window.App || {};
 (function($, undefined) {
-  Turbolinks.enableProgressBar();
+  App.init = function() {
+    Turbolinks.enableProgressBar();
+  }
+
+  // this is the Turbolinks event to bind to for page refreshes + DOM ready
+  $(document).on('page:change', function(e) {
+    App.init();
+  });
 })(jQuery);
