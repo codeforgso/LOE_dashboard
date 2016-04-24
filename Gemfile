@@ -27,6 +27,10 @@ gem 'activerecord-import'
 # redis
 gem 'redis-rails'
 
+# Use Bootstrap framework for UI
+gem 'bootstrap-sass'
+gem 'bootstrap-kaminari-views'
+
 group :development, :test do
   gem 'byebug'
   gem 'web-console', '~> 2.0'

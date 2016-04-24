@@ -11,4 +11,7 @@ require 'rails_helper'
 #   end
 # end
 RSpec.describe ApplicationHelper, type: :helper do
+  describe '#default_page_size' do
+    it { expect(helper.default_page_size).to eq(Kaminari.config.default_per_page) }
+  end
 end
