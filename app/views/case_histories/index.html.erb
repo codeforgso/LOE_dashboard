@@ -1,18 +1,20 @@
 <h1>Listing Case Histories</h1>
-<table>
-  <thead>
-    <th>Case Number</th>
-    <th>Date</th>
-    <th>Description</th>
-  </thead>
-  <tbody>
-    <% @case_histories.compact.each do |case_history| %>
-      <tr data-unique-id="<%= unique_case_history_id case_history -%>">
-        <td><%= link_to "#{case_history.case_number} - ##{case_history.case_history_sakey}", case_history_path(unique_case_history_id(case_history)) %></td>
-        <td><%= Date.parse(case_history.date) %></td>
-        <td><%= case_history.action %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-<div><%= paginate @case_histories %></div>
+<div class="table-responsive">
+  <table class="table table-striped table-condensed bg-white">
+    <thead>
+      <th>Case Number</th>
+      <th>Date</th>
+      <th>Description</th>
+    </thead>
+    <tbody>
+      <% @case_histories.compact.each do |case_history| %>
+        <tr data-unique-id="<%= unique_case_history_id case_history -%>">
+          <td><%= link_to "#{case_history.case_number} - ##{case_history.case_history_sakey}", case_history_path(unique_case_history_id(case_history)) %></td>
+          <td><%= Date.parse(case_history.date) %></td>
+          <td><%= case_history.action %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+<div class="text-center"><%= paginate @case_histories %></div>

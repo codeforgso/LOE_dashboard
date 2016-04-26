@@ -3,6 +3,13 @@
 @import "bootstrap";
 @import "bootstrap-datepicker3";
 
+// media queries
+@media (min-width: 0px) and (max-width: 700px) {
+  header h1 {
+    display: none !important;
+  }
+}
+
 // progress bars for turbolinks
 html.turbolinks-progress-bar::before {
   background-color: #3a81f0 !important;
@@ -45,3 +52,17 @@ html.turbolinks-progress-bar::before {
 }
 
 // specific classes
+body {
+  margin-top: 70px;
+}
+header {
+  background-color: #0f6a37;
+  color: #fff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  padding-left: 15px;
+  min-height: 70px;
+  padding-right: 15px;
+}

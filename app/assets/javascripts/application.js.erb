@@ -15,12 +15,44 @@
 //= require turbolinks
 //= require bootstrap-sprockets
 //= require bootstrap-datepicker/core
+//= require bootstrap3-typeahead
 //= require_tree .
 
+// necessary to get routes to paths
+<% environment.context_class.instance_eval { include Rails.application.routes.url_helpers} %>
+
+
 var App = window.App || {};
+App.urls = {
+  cases: {
+    autocomplete: '<%= url_for(autocomplete_cases_path) %>'
+  }
+};
 (function($, undefined) {
   App.init = function() {
     Turbolinks.enableProgressBar();
+    App.setup_autocomplete();
+  }
+
+  App.setup_autocomplete = function() {
+    $.each($("[data-autocomplete]"),function(i, item) {
+      var item_sel = $(item);
+      var form = item_sel.parentsUntil("form").parent('form');
+      var controller = form.attr('action').split("/")[1];
+      var url = App.urls[controller].autocomplete+'?param='+item_sel.data('autocompleteParam');
+      item_sel.typeahead({
+        delay: 100,
+        source: function(query, process) {
+          $.getJSON(
+            url+'&q='+query,
+            function(data) {
+              console.log(data);
+              return process(data);
+            }
+          );
+        }
+      });
+    });
   }
 
   // this is the Turbolinks event to bind to for page refreshes + DOM ready

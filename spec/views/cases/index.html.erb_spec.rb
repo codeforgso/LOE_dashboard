@@ -17,7 +17,7 @@ RSpec.describe "cases/index", type: :view do
       assert_select "input[name='filters[case_number]']"
       assert_select "input[name='filters[entry_date_range][start_date]']"
       assert_select "input[name='filters[entry_date_range][end_date]']"
-      assert_select "input[name='filters[st_name]']"
+      assert_select "input[name='filters[st_name]'][data-autocomplete='true']"
     end
     assert_select 'h2', text: /^Listing Cases/ do
       assert_select 'small', text: "(#{pluralize(@cases.total_count, 'total record')})"
