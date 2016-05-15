@@ -14,35 +14,28 @@ gem 'jquery-rails'
 gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
-gem 'unicorn'
-gem 'puma'
-gem 'font-awesome-rails',     '~> 4.3.0.0'
-gem 'nav_lynx',               '~> 1.1.1'
-gem 'figaro',                 '~> 1.1.0'
-gem 'metamagic',              '~> 3.1.6'
-gem 'soda-ruby',              :require => 'soda'
-gem 'kaminari'
-gem 'activerecord-import'
 
-# Assets
-gem 'bourbon';
-gem 'neat';
-gem 'bitters';
+# use soda-ruby for access to Socrata data
+gem 'soda-ruby',              :require => 'soda'
+
+# use kaminari for pagination
+gem 'kaminari'
+
+# use activerecord-import for bulk inserts
+gem 'activerecord-import'
 
 # redis
 gem 'redis-rails'
+
+# Use Bootstrap framework for UI
+gem 'bootstrap-sass'
+gem 'bootstrap-kaminari-views'
+gem 'bootstrap-datepicker-rails'
 
 group :development, :test do
   gem 'byebug'
   gem 'web-console', '~> 2.0'
   gem 'spring'
-  gem 'guard'
-  gem 'guard-bundler'
-  gem 'guard-compass'
-  gem 'guard-sass'
-  gem 'guard-livereload'
-  gem 'guard-ctags-bundler'
-  gem 'guard-puma'
   gem 'factory_girl_rails', '~> 4.0'
   gem 'faker'
   gem 'rspec-rails', '~> 3.0'
@@ -51,6 +44,4 @@ group :development, :test do
 end
 
 group :production do
-  gem 'rails_12factor'
-  gem 'rails_log_stdout',     github: 'heroku/rails_log_stdout'
 end

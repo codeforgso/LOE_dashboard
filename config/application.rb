@@ -24,6 +24,6 @@ module LoeDashboard
     config.active_record.raise_in_transactional_callbacks = true
 
     # redis
-    config.cache_store = :redis_store, 'redis://localhost:6379/0/cache', { expires_in: 20.minutes }
+    config.cache_store = :redis_store, "redis://localhost:6379/#{ENV['REDIS_DATABASE']}/cache", { expires_in: 20.minutes }
   end
 end

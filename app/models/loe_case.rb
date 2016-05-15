@@ -59,6 +59,7 @@ class LoeCase < ActiveRecord::Base
       none
     end
   end
+  scope :st_name, -> (st_name) { where st_name: st_name.try(:upcase) }
 
   def self.seed
     Socrata.seed self, Socrata.case_dataset_id

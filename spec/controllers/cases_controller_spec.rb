@@ -41,6 +41,16 @@ RSpec.describe CasesController, type: :controller do
           end
         end
       end
+      describe 'st_name' do
+        let(:st_name) { LoeCase.where('st_name is not ?',nil).sample.st_name }
+        it 'returns results filtered by st_name' do
+          get :index, filters: { st_name: st_name }
+          expect(assigns['cases'].size).to be > 0
+          assigns['cases'].each do |loe_case|
+            expect(loe_case.st_name).to eq(st_name)
+          end
+        end
+      end
     end
   end
 
@@ -51,6 +61,25 @@ RSpec.describe CasesController, type: :controller do
       expect(response.code).to eq("200")
       expect(assigns['case']).to be_a(LoeCase)
       expect(assigns['case'].case_number).to eq(expected.case_number)
+    end
+  end
+
+  describe "GET #autocomplete" do
+    before do
+      expected_count.times do |n|
+        loe_case = build(:loe_case)
+        loe_case.st_name = "A#{loe_case.st_name}"
+        loe_case.save!
+      end
+    end
+    let(:expected_count) { 8 }
+    let(:expected) do
+      LoeCase.select('distinct(st_name)').where('st_name ilike ?','A%').order(:st_name).map{|c| {"name" => c.st_name} }
+    end
+    it 'gets a JSON array of Street Names' do
+      get :autocomplete, {q: 'A', param: :st_name}, valid_session
+      expect(JSON.parse(response.body)).to eq(expected)
+      expect(JSON.parse(response.body).size).to eq(expected_count)
     end
   end
 

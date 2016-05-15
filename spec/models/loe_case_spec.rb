@@ -4,12 +4,12 @@ RSpec.describe LoeCase, type: :model do
   let(:loe_case) { build(:loe_case) }
   it 'has factories for testing' do
     expect(loe_case).to be_valid
-    expect(!!loe_case.save).to eq(true)
+    expect(loe_case.save!).to eq(true)
   end
 
   describe 'constants' do
     it 'has LoeCase::SOCRATA_ATTRIBUTE_REMAPPING' do
-      assert_socrata_attribute_remapping LoeCase
+      expect(LoeCase).to have_socrata_attribute_remapping
     end
   end
 
@@ -54,6 +54,30 @@ RSpec.describe LoeCase, type: :model do
         assert_equal total_count, actual.size
         actual.each do |loe_case|
           expect([Date.today, Date.today.next].include?(loe_case.entry_date.to_date)).to eq(true)
+        end
+      end
+    end
+
+    describe 'st_name' do
+      let(:subject) { LoeCase.st_name(st_name) }
+      let(:st_name) { LoeCase.where('st_name is not ?',nil).sample.st_name }
+      it 'returns records with matching :st_name' do
+        expect(st_name).to be_a(String)
+        expect(st_name).not_to eq('')
+        expect(subject.size).to be > 0
+        subject.each do |loe_case|
+          expect(loe_case.st_name).to eq(st_name)
+        end
+      end
+
+      describe 'with lowercased st_name' do
+        let(:subject) { LoeCase.st_name(st_name.downcase) }
+        it 'returns results with case insensitive st_name match' do
+          expect(subject.size).to be > 0
+          subject.each do |loe_case|
+            expect(loe_case.st_name).to eq(st_name)
+            expect(loe_case.st_name).not_to eq(st_name.downcase)
+          end
         end
       end
     end

@@ -1,18 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <title>City of Greensboro | LOE Dashboard</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <%= csrf_meta_tags %>
 </head>
-<body>
-
-<%= render "shared/header" %>
-
-<div class="wrapper">
-  <%= yield %>
-</div>
-
+<body class="container-fluid">
+  <%= render "shared/header" %>
+  <div class="wrapper">
+    <% unless notice.blank? %>
+      <div class="alert alert-warning" id="notice" role="alert">
+        <%= notice %>
+        <button class="close" type="button" aria-label="Close" data-dismiss="alert">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    <% end %>
+    <% unless alert.blank? %>
+      <div class="alert alert-danger" id="alert" role="alert">
+        <%= alert %>
+        <button class="close" type="button" aria-label="Close" data-dismiss="alert">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    <% end %>
+    <%= yield %>
+  </div>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
 </body>
 </html>

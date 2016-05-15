@@ -1,37 +1,64 @@
-<h1>Search Filters</h1>
-<%= form_tag(cases_path, method: :get) do %>
-  <table class="search">
-    <tr>
-      <th>Case Number</th>
-      <td><%= text_field_tag 'filters[case_number]' %></td>
-    </tr>
-    <tr>
-      <th>Entry Date (start) <span class="no-bold">(YYYY-MM-DD)</span></th>
-      <td><%= text_field_tag 'filters[entry_date_range][start_date]' %></td>
-    </tr>
-    <tr>
-      <th>Entry Date (end) <span class="no-bold">(YYYY-MM-DD)</span></th>
-      <td><%= text_field_tag 'filters[entry_date_range][end_date]' %></td>
-    </tr>
-  </table>
-  <%= submit_tag 'Search' %>
+<h2>Search Filters</h2>
+<%= form_tag(cases_path, method: :get, class: 'form-horizontal') do %>
+  <div class="form-group">
+    <label class="col-sm-2 control-label" for="case_number">
+      Case Number
+    </label>
+    <div class="col-sm-10">
+      <%= text_field_tag 'filters[case_number]', params[:filters][:case_number] %>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label" for="start_date">
+      Entry Date (start) <span class="text-muted">(YYYY-MM-DD)</span>
+    </label>
+    <div class="col-sm-10">
+      <%= text_field_tag 'filters[entry_date_range][start_date]', params[:filters][:entry_date_range].try(:start_date), data: { provide: :datepicker, 'date-autoclose': true, 'date-today-highlight': true, 'date-days-of-week-highlighted': '1,2,3,4,5', 'date-format': 'yyyy/mm/dd' } %>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label" for="end_date">
+      Entry Date (end) <span class="text-muted">(YYYY-MM-DD)</span>
+    </label>
+    <div class="col-sm-10">
+      <%= text_field_tag 'filters[entry_date_range][end_date]', params[:filters][:entry_date_range].try(:end_date), data: { provide: :datepicker, 'date-autoclose': true, 'date-today-highlight': true, 'date-days-of-week-highlighted': '1,2,3,4,5', 'date-format': 'yyyy/mm/dd' } %>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label" for="st_name">
+      Street Name
+    </label>
+    <div class="col-sm-10">
+      <%= text_field_tag 'filters[st_name]', params[:filters][:st_name], data: {autocomplete: true, autocomplete_param: :st_name}, autocomplete: :off %>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <span class="icon-input-btn">
+        <%= submit_tag 'Search', "data-disable-with" => "Searching...", class: 'btn btn-primary' %>
+        <span aria-hidden="true" class="glyphicon glyphicon-search white"></span>
+      </span>
+    </div>
+  </div>
 <% end %>
 <hr />
-<h1>Listing Cases</h1>
-<table>
-  <thead>
-    <th>Case Number</th>
-    <th>Entry Date</th>
-    <th>Case Notes</th>
-  </thead>
-  <tbody>
-    <% @cases.each do |loe_case| %>
-      <tr data-id="<%= loe_case.id -%>">
-        <td><%= link_to loe_case.case_number, case_path(loe_case) %></td>
-        <td><%= loe_case.entry_date.try :localtime %></td>
-        <td><%= loe_case.case_notes %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-<div><%= paginate @cases %></div>
+<h2>Listing Cases <small>(<%= pluralize(@cases.total_count, 'total record') %>)</small></h2>
+<div class="table-responsive">
+  <table class="table table-striped table-condensed bg-white">
+    <thead>
+      <th>Case Number</th>
+      <th>Entry Date</th>
+      <th>Case Notes</th>
+    </thead>
+    <tbody>
+      <% @cases.each do |loe_case| %>
+        <tr data-id="<%= loe_case.id -%>">
+          <td><%= link_to loe_case.case_number, case_path(loe_case) %></td>
+          <td class="no-wrap"><%= loe_case.entry_date.try :localtime %></td>
+          <td><%= loe_case.case_notes %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+<div class="text-center"><%= paginate @cases %></div>

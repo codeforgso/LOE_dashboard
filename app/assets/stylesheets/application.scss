@@ -1,14 +1,14 @@
-@import "bourbon";
-@import "base/grid-settings";
-@import "neat";
-@import "base/base";
-@import "font-awesome";
+// "bootstrap-sprockets" must be imported before "bootstrap" and "bootstrap/variables"
+@import "bootstrap-sprockets";
+@import "bootstrap";
+@import "bootstrap-datepicker3";
 
-// Partials
-@import "partials/header";
-
-// Custom
-@import "custom/layout";
+// media queries
+@media (min-width: 0px) and (max-width: 700px) {
+  header h1 {
+    display: none !important;
+  }
+}
 
 // progress bars for turbolinks
 html.turbolinks-progress-bar::before {
@@ -16,12 +16,53 @@ html.turbolinks-progress-bar::before {
   height: 2px !important;
 }
 
+// show glyphicons on form submit input
+.icon-input-btn{
+  display: inline-block;
+  position: relative;
+}
+.icon-input-btn input[type="submit"]{
+  padding-right: 2em;
+}
+.icon-input-btn .glyphicon{
+  display: inline-block;
+  position: absolute;
+  right: 0.65em;
+  top: 30%;
+}
+
+// generic classes
 .no-bold {
   font-weight: normal !important;
 }
+.no-wrap {
+  white-space: nowrap;
+}
+.float-right {
+  float: right;
+}
+.inline-block {
+  display: inline-block;
+}
+.margin-top-fifteen {
+  margin-top: 15px;
+}
+.white {
+  color: #fff;
+}
 
-// search filters
-table.search th {
-  text-align: right;
-  padding-right: 10px;
+// specific classes
+body {
+  margin-top: 70px;
+}
+header {
+  background-color: #0f6a37;
+  color: #fff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  padding-left: 15px;
+  min-height: 70px;
+  padding-right: 15px;
 }
