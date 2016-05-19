@@ -51,6 +51,16 @@ RSpec.describe CasesController, type: :controller do
           end
         end
       end
+      describe 'full_address' do
+        let(:full_address) { LoeCase.where('full_address is not ?',nil).sample.full_address }
+        it 'returns results filtered by full_address' do
+          get :index, filters: { full_address: full_address }
+          expect(assigns['cases'].size).to be > 0
+          assigns['cases'].each do |loe_case|
+            expect(loe_case.full_address).to eq(full_address)
+          end
+        end
+      end
     end
   end
 
@@ -65,21 +75,40 @@ RSpec.describe CasesController, type: :controller do
   end
 
   describe "GET #autocomplete" do
-    before do
-      expected_count.times do |n|
-        loe_case = build(:loe_case)
-        loe_case.st_name = "A#{loe_case.st_name}"
-        loe_case.save!
+    let(:expected_count) { 8 }
+    context 'st_name' do
+      before do
+        expected_count.times do |n|
+          loe_case = build(:loe_case)
+          loe_case.st_name = "A#{loe_case.st_name}"
+          loe_case.save!
+        end
+      end
+      let(:expected) do
+        LoeCase.select('distinct(st_name)').where('st_name ilike ?','A%').order(:st_name).map{|c| {"name" => c.st_name} }
+      end
+      it 'gets a JSON array of Street Names' do
+        get :autocomplete, {q: 'A', param: :st_name}, valid_session
+        expect(JSON.parse(response.body)).to eq(expected)
+        expect(JSON.parse(response.body).size).to eq(expected_count)
       end
     end
-    let(:expected_count) { 8 }
-    let(:expected) do
-      LoeCase.select('distinct(st_name)').where('st_name ilike ?','A%').order(:st_name).map{|c| {"name" => c.st_name} }
-    end
-    it 'gets a JSON array of Street Names' do
-      get :autocomplete, {q: 'A', param: :st_name}, valid_session
-      expect(JSON.parse(response.body)).to eq(expected)
-      expect(JSON.parse(response.body).size).to eq(expected_count)
+    context 'full_address' do
+      before do
+        expected_count.times do |n|
+          loe_case = build(:loe_case)
+          loe_case.full_address = "9#{loe_case.full_address}"
+          loe_case.save!
+        end
+      end
+      let(:expected) do
+        LoeCase.select('distinct(full_address)').where('full_address ilike ?','9%').limit(expected_count).order(:full_address).map{|c| {"name" => c.full_address} }
+      end
+      it 'gets a JSON array of Street Names' do
+        get :autocomplete, {q: '9', param: :full_address}, valid_session
+        expect(JSON.parse(response.body)).to eq(expected)
+        expect(JSON.parse(response.body).size).to eq(expected_count)
+      end
     end
   end
 

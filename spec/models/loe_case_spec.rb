@@ -81,6 +81,30 @@ RSpec.describe LoeCase, type: :model do
         end
       end
     end
+
+    describe 'full_address' do
+      let(:subject) { LoeCase.full_address(full_address) }
+      let(:full_address) { LoeCase.where('full_address is not ?',nil).sample.full_address }
+      it 'returns records with matching :full_address' do
+        expect(full_address).to be_a(String)
+        expect(full_address).not_to eq('')
+        expect(subject.size).to be > 0
+        subject.each do |loe_case|
+          expect(loe_case.full_address).to eq(full_address)
+        end
+      end
+
+      describe 'with lowercased full_address' do
+        let(:subject) { LoeCase.full_address(full_address.downcase) }
+        it 'returns results with case insensitive full_address match' do
+          expect(subject.size).to be > 0
+          subject.each do |loe_case|
+            expect(loe_case.full_address).to eq(full_address)
+            expect(loe_case.full_address).not_to eq(full_address.downcase)
+          end
+        end
+      end
+    end
   end
 
   describe '#assign_from_socrata' do
