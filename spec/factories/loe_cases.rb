@@ -32,5 +32,6 @@ FactoryGirl.define do
     use_code                  {Faker::Lorem.words.join(' ')}
     zoning                    {Faker::Lorem.words.join(' ')}
     st_name                   {Faker::Address.street_name.upcase}
+    full_address              {Faker::Address.street_address}
   end
 end
