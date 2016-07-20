@@ -1,10 +1,6 @@
 FactoryGirl.define do
   factory :violation do
     loe_case
-    ad_st_apt               {Faker::Lorem.words.join(' ')}
-    ad_st_name              {Faker::Lorem.words.join(' ')}
-    ad_st_num               {Faker::Lorem.words.join(' ')}
-    ad_st_type              {Faker::Lorem.words.join(' ')}
     case_number             {Faker::Number.between(1, 10000)}
     case_sakey              {Faker::Number.between(1, 10000)}
     clear_date              {Time.now.advance(days: Faker::Number.between(1, 10000))}
