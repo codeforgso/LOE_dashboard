@@ -22,3 +22,6 @@ config/initializers/soda-ruby.rb
 
 # Ignore .env file
 .env
+
+# Other files to ignore
+*.sublime-workspace
