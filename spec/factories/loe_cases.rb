@@ -3,10 +3,6 @@ FactoryGirl.define do
   factory :loe_case do
     ad_lot                    {Faker::Lorem.words.join(' ')}
     ad_sakey                  {Faker::Number.between(1, 10000)}
-    ad_st_apt                 {Faker::Lorem.words.join(' ')}
-    ad_st_name                {Faker::Lorem.words.join(' ')}
-    ad_st_num                 {Faker::Lorem.words.join(' ')}
-    ad_st_type                {Faker::Lorem.words.join(' ')}
     annex_date                {Time.now.advance(years: Faker::Number.between(1, 100)).to_date}
     assigned_inspector_code   {Faker::Lorem.words.join(' ')}
     assignment                {Faker::Lorem.words.join(' ')}

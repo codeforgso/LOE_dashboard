@@ -11,7 +11,6 @@ class Inspection < ActiveRecord::Base
     "inspectiontype" => "inspection_type",
     "inspectiontypedesc" => "inspection_type_desc",
     "lastupdate" => "last_update",
-    "openandvacant" => "open_and_vacant",
     "stapt" => "st_apt",
     "stname" => "st_name",
     "stnumber" => "st_number",
@@ -20,7 +19,9 @@ class Inspection < ActiveRecord::Base
     "fulladdress" => "full_address",
     "xcoord" => "x_coord",
     "ycoord" => "y_coord",
-    "adsakey" => "ad_sakey"
+    "adsakey" => "ad_sakey",
+    "casetype" => "case_type",
+    "casestatus" => "case_status"
   }
 
 
