@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160720232230) do
+ActiveRecord::Schema.define(version: 20160720233122) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -65,7 +65,6 @@ ActiveRecord::Schema.define(version: 20160720232230) do
     t.string   "assignment"
     t.text     "case_notes"
     t.integer  "case_number"
-    t.string   "case_status"
     t.string   "case_type"
     t.string   "census_tract"
     t.datetime "close_date"
@@ -97,7 +96,10 @@ ActiveRecord::Schema.define(version: 20160720232230) do
     t.string   "st_type"
     t.float    "x_coord"
     t.float    "y_coord"
+    t.integer  "case_status_id"
   end
+
+  add_index "loe_cases", ["case_status_id"], name: "index_loe_cases_on_case_status_id", using: :btree
 
   create_table "violations", force: :cascade do |t|
     t.integer  "loe_case_id"

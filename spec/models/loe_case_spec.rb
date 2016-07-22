@@ -16,15 +16,22 @@ RSpec.describe LoeCase, type: :model do
   describe 'ActiveRecord associations' do
     it { expect(loe_case).to have_many(:inspections) }
     it { expect(loe_case).to have_many(:violations) }
+    it { expect(loe_case).to belong_to(:case_status) }
   end
 
   describe 'scopes' do
     before do
       total_count.times do |n|
-        create :loe_case, :entry_date => (n%2==0 ? Date.today : Date.today.next).to_time
+        opts = {
+          entry_date: (n%2==0 ? Date.today : Date.today.next).to_time,
+          case_status: n%2==0 ? case_status_open : case_status_closed
+        }
+        create :loe_case, opts
       end
     end
     let(:total_count) { 10 }
+    let(:case_status_open) { create :case_status_open }
+    let(:case_status_closed) { create :case_status_closed }
 
     describe 'case_number' do
       it 'returns records for a given case_number' do
@@ -102,6 +109,28 @@ RSpec.describe LoeCase, type: :model do
             expect(loe_case.full_address).to eq(full_address)
             expect(loe_case.full_address).not_to eq(full_address.downcase)
           end
+        end
+      end
+    end
+
+    describe 'open' do
+      let(:actual) { LoeCase.open }
+      it 'returns records with Open case status' do
+        expect(LoeCase).to respond_to(:open)
+        expect(actual.size).to eq(total_count/2)
+        actual.each do |loe_case|
+          expect(loe_case.case_status_id).to eq(case_status_open.id)
+        end
+      end
+    end
+
+    describe 'closed' do
+      let(:actual) { LoeCase.closed }
+      it 'returns records with Closed case status' do
+        expect(LoeCase).to respond_to(:closed)
+        expect(actual.size).to eq(total_count/2)
+        actual.each do |loe_case|
+          expect(loe_case.case_status_id).to eq(case_status_closed.id)
         end
       end
     end

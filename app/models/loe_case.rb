@@ -9,7 +9,6 @@ class LoeCase < ActiveRecord::Base
     "assignedinspcode" => "assigned_inspector_code",
     "casenotes" => "case_notes",
     "casenumber" => "case_number",
-    "casestatus" => "case_status",
     "casetype" => "case_type",
     "censustract" => "census_tract",
     "closedate" => "close_date",
@@ -37,6 +36,7 @@ class LoeCase < ActiveRecord::Base
 
   has_many :inspections, -> { order(:case_sakey) }
   has_many :violations, -> { order(:case_sakey) }
+  belongs_to :case_status
 
   scope :case_number, -> (case_number) { where case_number: case_number }
   scope :entry_date_range, -> (entry_date_range) do
@@ -61,6 +61,8 @@ class LoeCase < ActiveRecord::Base
   end
   scope :st_name, -> (st_name) { where st_name: st_name.try(:upcase) }
   scope :full_address, -> (full_address) { where('upper(full_address) = ?', full_address.try(:upcase)) }
+  scope :open, -> { where case_status_id: CaseStatus.open.id }
+  scope :closed, -> { where case_status_id: CaseStatus.closed.id }
 
   def self.seed
     Socrata.seed self, Socrata.case_dataset_id
@@ -69,24 +71,32 @@ class LoeCase < ActiveRecord::Base
   def assign_from_socrata(socrata_result)
     socrata_result.keys.each do |key|
       col = self.class::SOCRATA_ATTRIBUTE_REMAPPING[key] || key
-      raise "undefined attribute: #{key}" unless self.class.column_names.include?(col)
-      case col.to_s
-      when "ad_sakey", "case_number"
-        self[col.to_sym] = socrata_result[key].strip.to_i
-      when "annex_date"
-        val = socrata_result[key].strip.split(",")[0].strip
-        if val.length==4
-          val += "/01/01"
+      relations = { 'casestatus' => CaseStatus }
+      if relations.keys.include?(col.to_s)
+        opts = { name: socrata_result[key].strip }
+        klass = relations[key]
+        foreign_record = klass.where(opts).first || klass.create(opts)
+        self["#{klass.to_s.tableize.singularize}_id".to_sym] = foreign_record.id
+      else
+        raise "undefined attribute: #{key}" unless self.class.column_names.include?(col)
+        case col.to_s
+        when "ad_sakey", "case_number"
+          self[col.to_sym] = socrata_result[key].strip.to_i
+        when "annex_date"
+          val = socrata_result[key].strip.split(",")[0].strip
+          if val.length==4
+            val += "/01/01"
+          end
+          self[col.to_sym] = Date.parse val
+          if self[col.to_sym] > Date.today
+            self[col.to_sym] = self[col.to_sym].to_time.advance(years: -100).to_date
+          end
+        when "close_date", "due_date", "entry_date", "last_update"
+          self[col.to_sym] = Time.parse(socrata_result[key].strip)
+        when "x_coord", "y_coord"
+          self[col.to_sym] = socrata_result[key].strip.to_f
+        else self[col.to_sym] = socrata_result[key].strip
         end
-        self[col.to_sym] = Date.parse val
-        if self[col.to_sym] > Date.today
-          self[col.to_sym] = self[col.to_sym].to_time.advance(years: -100).to_date
-        end
-      when "close_date", "due_date", "entry_date", "last_update"
-        self[col.to_sym] = Time.parse(socrata_result[key].strip)
-      when "x_coord", "y_coord"
-        self[col.to_sym] = socrata_result[key].strip.to_f
-      else self[col.to_sym] = socrata_result[key].strip
       end
     end
   end
