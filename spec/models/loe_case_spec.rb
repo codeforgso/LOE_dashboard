@@ -17,6 +17,7 @@ RSpec.describe LoeCase, type: :model do
     it { expect(loe_case).to have_many(:inspections) }
     it { expect(loe_case).to have_many(:violations) }
     it { expect(loe_case).to belong_to(:case_status) }
+    it { expect(loe_case).to belong_to(:use_code) }
   end
 
   describe 'scopes' do
@@ -24,7 +25,8 @@ RSpec.describe LoeCase, type: :model do
       total_count.times do |n|
         opts = {
           entry_date: (n%2==0 ? Date.today : Date.today.next).to_time,
-          case_status: n%2==0 ? case_status_open : case_status_closed
+          case_status: n%2==0 ? case_status_open : case_status_closed,
+          use_code: n%2==0 ? use_code1 : use_code2
         }
         create :loe_case, opts
       end
@@ -32,6 +34,8 @@ RSpec.describe LoeCase, type: :model do
     let(:total_count) { 10 }
     let(:case_status_open) { create :case_status_open }
     let(:case_status_closed) { create :case_status_closed }
+    let(:use_code1) { create :use_code }
+    let(:use_code2) { create :use_code }
 
     describe 'case_number' do
       it 'returns records for a given case_number' do
@@ -131,6 +135,17 @@ RSpec.describe LoeCase, type: :model do
         expect(actual.size).to eq(total_count/2)
         actual.each do |loe_case|
           expect(loe_case.case_status_id).to eq(case_status_closed.id)
+        end
+      end
+    end
+
+    describe 'use_code' do
+      let(:actual) { LoeCase.use_code(use_code1.id) }
+      it 'returns records that match use_code_id' do
+        expect(LoeCase).to respond_to(:use_code)
+        expect(actual.size).to eq(total_count/2)
+        actual.each do |loe_case|
+          expect(loe_case.use_code_id).to eq(use_code1.id)
         end
       end
     end

@@ -29,7 +29,6 @@ class LoeCase < ActiveRecord::Base
     "stname" => "st_name",
     "stnumber" => "st_number",
     "sttype" => "st_type",
-    "usecode" => "use_code",
     "xcoord" => "x_coord",
     "ycoord" => "y_coord"
   }
@@ -37,6 +36,7 @@ class LoeCase < ActiveRecord::Base
   has_many :inspections, -> { order(:case_sakey) }
   has_many :violations, -> { order(:case_sakey) }
   belongs_to :case_status
+  belongs_to :use_code
 
   scope :case_number, -> (case_number) { where case_number: case_number }
   scope :entry_date_range, -> (entry_date_range) do
@@ -63,19 +63,30 @@ class LoeCase < ActiveRecord::Base
   scope :full_address, -> (full_address) { where('upper(full_address) = ?', full_address.try(:upcase)) }
   scope :open, -> { where case_status_id: CaseStatus.open.id }
   scope :closed, -> { where case_status_id: CaseStatus.closed.id }
+  scope :use_code, -> (use_code) { where(use_code_id: use_code) }
 
   def self.seed
+    Rails.cache.clear
     Socrata.seed self, Socrata.case_dataset_id
   end
 
   def assign_from_socrata(socrata_result)
     socrata_result.keys.each do |key|
       col = self.class::SOCRATA_ATTRIBUTE_REMAPPING[key] || key
-      relations = { 'casestatus' => CaseStatus }
+      relations = {
+        'casestatus' => CaseStatus,
+        'usecode' => UseCode
+      }
       if relations.keys.include?(col.to_s)
         opts = { name: socrata_result[key].strip }
         klass = relations[key]
-        foreign_record = klass.where(opts).first || klass.create(opts)
+        case klass.to_s
+        when 'UseCode'
+          opts[:name] = UseCode.remap_name opts[:name]
+        end
+        foreign_record = Rails.cache.fetch("#{klass}_name-#{opts[:name]}") do
+          klass.where(opts).first || klass.create(opts)
+        end
         self["#{klass.to_s.tableize.singularize}_id".to_sym] = foreign_record.id
       else
         raise "undefined attribute: #{key}" unless self.class.column_names.include?(col)
