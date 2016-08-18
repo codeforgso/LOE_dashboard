@@ -85,7 +85,7 @@ RSpec.describe CasesController, type: :controller do
         end
       end
       let(:expected) do
-        LoeCase.select('distinct(st_name)').where('st_name ilike ?','A%').order(:st_name).map{|c| {"name" => c.st_name} }
+        LoeCase.select('distinct(st_name)').where('st_name ilike ?','A%').limit(expected_count).order(:st_name).map{|c| {"name" => c.st_name} }
       end
       it 'gets a JSON array of Street Names' do
         get :autocomplete, {q: 'A', param: :st_name}, valid_session
