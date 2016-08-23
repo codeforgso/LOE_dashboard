@@ -3,7 +3,7 @@ class CasesController < ApplicationController
 
   def index
     params[:filters] ||= {}
-    @cases = LoeCase.filter(params[:filters].slice(:case_number, :entry_date_range, :st_name, :full_address))
+    @cases = LoeCase.filter(params[:filters].slice(*valid_filters))
       .order('entry_date, case_number')
       .page params[:page]
   end
@@ -32,6 +32,12 @@ class CasesController < ApplicationController
       []
     end
     render text: data.to_json
+  end
+
+  private
+
+  def valid_filters
+    [:case_number, :entry_date_range, :st_name, :full_address]
   end
 
 end
