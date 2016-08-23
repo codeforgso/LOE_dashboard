@@ -19,6 +19,17 @@ RSpec.describe CasesController, type: :controller do
     end
 
     describe 'with search filters' do
+      describe 'valid_filters' do
+        let(:valid_filters) { controller.send :valid_filters }
+        it 'returns an array of valid filter keys' do
+          expect(valid_filters).to be_an(Array)
+          expect(valid_filters.size).to be > 0
+          valid_filters.each do |key|
+            expect(LoeCase).to respond_to(key)
+          end
+          expect(valid_filters.include?(:use_code)).to eq(true)
+        end
+      end
       describe 'case_number' do
         it 'returns results for a given case_number' do
           LoeCase.all.each do |expected|
