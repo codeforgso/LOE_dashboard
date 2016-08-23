@@ -37,7 +37,10 @@ class CasesController < ApplicationController
   private
 
   def valid_filters
-    [:case_number, :entry_date_range, :st_name, :full_address]
+    [
+      :case_number, :entry_date_range, :st_name, :full_address,
+      :use_code
+    ]
   end
 
 end
