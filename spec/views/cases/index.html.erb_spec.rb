@@ -13,6 +13,7 @@ RSpec.describe "cases/index", type: :view do
   it "renders a list of cases" do
     allow(view).to receive(:params).and_return(params)
     render
+    expect(response).to render_template(partial: '_filters')
     assert_select "form[action='#{cases_path}'][method=get]" do
       assert_select "input[name='filters[case_number]']"
       assert_select "input[name='filters[entry_date_range][start_date]']"
