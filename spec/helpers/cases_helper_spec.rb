@@ -35,4 +35,34 @@ RSpec.describe CasesHelper, type: :helper do
     end
   end
 
+  describe '#sort_dir' do
+    let(:param) { Faker::Lorem.word.downcase.to_sym }
+    [nil, true, false].each do |param_selected|
+      context "with#{param_selected.nil? ? ' no' : (param_selected ? nil : 'out')} param#{param_selected.nil? ? 's' : nil} selected" do
+        [false, true].each do |descending|
+          context "with #{descending ? 'descending' : 'ascending'} sort order" do
+            let(:params) do
+              {
+                sort: param_selected.nil? ? nil : (param_selected ? param : 'foo'),
+                sort_dir: param_selected.nil? ? nil : (descending ? 'DESC' : 'ASC')
+              }
+            end
+            let(:actual) { helper.sort_dir(param) }
+            let(:expected) do
+              if param_selected
+                params[:sort_dir] == 'DESC' ? 'ASC' : 'DESC'
+              else
+                'DESC'
+              end
+            end
+            it 'returns the appropriate sort direction' do
+              allow(helper).to receive(:params).and_return(params)
+              expect(actual).to eq(expected)
+            end
+          end
+        end
+      end
+    end
+  end
+
 end

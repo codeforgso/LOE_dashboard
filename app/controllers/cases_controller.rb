@@ -3,8 +3,10 @@ class CasesController < ApplicationController
 
   def index
     params[:filters] ||= {}
+    sort = (valid_sorts && [params[:sort]]).first || 'entry_date'
+    sort += " #{(['ASC', 'DESC'] && [params[:sort_dir]]).first}"
     @cases = LoeCase.filter(params[:filters].slice(*valid_filters))
-      .order('entry_date, case_number')
+      .order(sort)
       .page params[:page]
   end
 
@@ -41,6 +43,10 @@ class CasesController < ApplicationController
       :case_number, :entry_date_range, :st_name, :full_address,
       :use_code
     ]
+  end
+
+  def valid_sorts
+    [:entry_date, :case_number]
   end
 
 end

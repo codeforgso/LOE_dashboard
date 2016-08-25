@@ -73,6 +73,41 @@ RSpec.describe CasesController, type: :controller do
         end
       end
     end
+
+    context 'with sort parameters' do
+      [nil, :entry_date, :case_number].each do |sort_param|
+        context "with #{sort_param.nil? ? 'nil' : sort_param} as :sort" do
+          ['DESC', 'ASC'].each do |sort_dir|
+            sort_dir = nil if sort_param.nil?
+            context "with #{sort_dir.nil? ? 'nil' : sort_dir} as :sort_dir" do
+              let(:params) do
+                {
+                  sort: sort_param,
+                  sort_dir: sort_dir
+                }
+              end
+              it 'returns records sorted appropriately' do
+                get :index, params, valid_session
+                expect(assigns(:cases).size).to eq(expected_count)
+                case sort_param
+                when nil
+                  sorted = assigns(:cases).sort {|x, y| x.entry_date <=> y.entry_date }
+                when :entry_date, :case_number
+                  if sort_dir == 'ASC'
+                    sorted = assigns(:cases).sort {|x, y| x[sort_param] <=> y[sort_param] }
+                  else
+                    sorted = assigns(:cases).sort {|x, y| y[sort_param] <=> x[sort_param] }
+                  end
+                else
+                  pending "TODO: add #{sort_parm} to #{File.basename(__FILE__)}:#{__LINE__}"
+                end
+                expect(assigns(:cases)).to eq(sorted)
+              end
+            end
+          end
+        end
+      end
+    end
   end
 
   describe 'GET #show' do
@@ -120,6 +155,14 @@ RSpec.describe CasesController, type: :controller do
         expect(JSON.parse(response.body)).to eq(expected)
         expect(JSON.parse(response.body).size).to eq(expected_count)
       end
+    end
+  end
+
+  describe 'valid_sorts' do
+    let(:expected) { [:entry_date, :case_number] }
+    let(:actual) { controller.send(:valid_sorts) }
+    it 'returns an array of valid attributes for sorting' do
+      expect(actual).to eq(expected)
     end
   end
 
