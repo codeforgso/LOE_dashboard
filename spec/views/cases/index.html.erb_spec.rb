@@ -36,6 +36,9 @@ RSpec.describe "cases/index", type: :view do
     end
     assert_select 'table' do
       assert_select 'thead' do
+        # Do not include :page param in sort links.
+        # See http://ux.stackexchange.com/questions/62154/reset-page-when-gridview-sort-order-is-changed
+        assert_select "a[href*='page=']", count: 0
         assert_select "th a[href='#{cases_path(sort: :case_number, sort_dir: 'DESC', filters: params[:filters])}']" , text: 'Case Number'
         assert_select "th a[href='#{cases_path(sort: :entry_date, sort_dir: 'DESC', filters: params[:filters])}']" , text: 'Entry Date'
       end

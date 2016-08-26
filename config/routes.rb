@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   resources :case_histories, only: [:show, :index]
   resources :inspections, only: [:show, :index]
   resources :violations, only: [:show, :index]
+  resources :pages, only: [:index]
 
-  root 'pages#index'
+  root 'cases#index'
 end
