@@ -44,11 +44,17 @@ html.turbolinks-progress-bar::before {
 .inline-block {
   display: inline-block;
 }
+.margin-left-ten {
+  margin-left: 10px;
+}
 .margin-top-fifteen {
   margin-top: 15px;
 }
 .white {
   color: #fff;
+}
+.clear {
+  clear: both;
 }
 
 // specific classes
