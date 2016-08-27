@@ -28,7 +28,7 @@ gem 'activerecord-import'
 gem 'redis-rails'
 
 # Use Bootstrap framework for UI
-gem 'bootstrap-sass'
+gem 'bootstrap-sass', '~> 3.3.7'
 gem 'bootstrap-kaminari-views'
 gem 'bootstrap-datepicker-rails'
 
