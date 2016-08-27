@@ -32,6 +32,7 @@ App.urls = {
   App.init = function() {
     Turbolinks.enableProgressBar();
     App.setup_autocomplete();
+    App.setup_tabs();
   }
 
   App.setup_autocomplete = function() {
@@ -46,12 +47,18 @@ App.urls = {
           $.getJSON(
             url+'&q='+query,
             function(data) {
-              console.log(data);
               return process(data);
             }
           );
         }
       });
+    });
+  }
+
+  App.setup_tabs = function() {
+    $("ul.nav-tabs a").click(function(e) {
+      e.preventDefault();
+      $(this).tab('show');
     });
   }
 
