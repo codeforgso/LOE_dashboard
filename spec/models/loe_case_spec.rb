@@ -151,6 +151,15 @@ RSpec.describe LoeCase, type: :model do
     end
   end
 
+  describe 'google_maps_query' do
+    let(:expected) do
+      "#{loe_case.full_address}, #{loe_case.city}, #{loe_case.state}"
+    end
+    it 'returns a query for Google Maps' do
+      expect(loe_case.google_maps_query).to eq(expected)
+    end
+  end
+
   describe '#assign_from_socrata' do
     let(:loe_case) { LoeCase.new }
     let(:opts) do

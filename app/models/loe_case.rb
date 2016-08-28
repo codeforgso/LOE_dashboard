@@ -65,6 +65,10 @@ class LoeCase < ActiveRecord::Base
   scope :closed, -> { where case_status_id: CaseStatus.closed.id }
   scope :use_code, -> (use_code) { where(use_code_id: use_code) }
 
+  def google_maps_query
+    "#{full_address}, #{city}, #{state}"
+  end
+
   def self.seed
     Rails.cache.clear
     Socrata.seed self, Socrata.case_dataset_id
