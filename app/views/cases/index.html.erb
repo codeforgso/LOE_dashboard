@@ -19,7 +19,7 @@
     <tbody>
       <% @cases.each do |loe_case| %>
         <tr data-id="<%= loe_case.id -%>">
-          <td><%= link_to loe_case.case_number, case_path(loe_case) %></td>
+          <td><%= link_to loe_case.case_number, case_path(loe_case.case_number) %></td>
           <td class="no-wrap"><%= loe_case.entry_date.try :localtime %></td>
           <td><%= loe_case.case_notes %></td>
         </tr>

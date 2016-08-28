@@ -8,7 +8,7 @@ RSpec.describe CasesController, type: :routing do
     end
 
     it 'routes to #show' do
-      expect(get: '/cases/1').to route_to('cases#show', id: '1')
+      expect(get: '/cases/1').to route_to('cases#show', case_number: '1')
     end
 
     it 'routes to #autocomplete' do

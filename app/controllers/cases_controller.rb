@@ -12,8 +12,8 @@ class CasesController < ApplicationController
   end
 
   def show
-    @case = Rails.cache.fetch("cases_show_#{params[:id]}}") do
-      LoeCase.where(id: params[:id]).eager_load(:violations, :inspections).first
+    @case = Rails.cache.fetch("cases_show_#{params[:case_number]}}") do
+      LoeCase.where(case_number: params[:case_number]).eager_load(:violations, :inspections).first
     end
   end
 

@@ -121,7 +121,7 @@ RSpec.describe CasesController, type: :controller do
   describe 'GET #show' do
     let(:expected) { create :loe_case }
     it 'assigns @loe_case' do
-      get :show, {id: expected.id}
+      get :show, {case_number: expected.case_number}
       expect(response.code).to eq("200")
       expect(assigns['case']).to be_a(LoeCase)
       expect(assigns['case'].case_number).to eq(expected.case_number)

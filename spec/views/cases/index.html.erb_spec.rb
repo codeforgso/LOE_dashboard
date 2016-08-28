@@ -45,7 +45,7 @@ RSpec.describe "cases/index", type: :view do
       assert_select 'tbody' do
         @cases.each do |item|
           assert_select "tr[data-id='#{item.id}']" do
-            assert_select "td a[href='#{case_path(item)}']", text: item.case_number.to_s
+            assert_select "td a[href='#{case_path(item.case_number)}']", text: item.case_number.to_s
           end
         end
       end
