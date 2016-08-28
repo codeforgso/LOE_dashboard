@@ -54,7 +54,11 @@ RSpec.describe CasesController, type: :controller do
       end
       describe 'st_name' do
         let(:st_name) { LoeCase.where('st_name is not ?',nil).sample.st_name }
+        let(:new_select_for_index) do
+          controller.send(:select_for_index) + [:st_name]
+        end
         it 'returns results filtered by st_name' do
+          allow_any_instance_of(CasesController).to receive(:select_for_index).and_return(new_select_for_index)
           get :index, filters: { st_name: st_name }
           expect(assigns['cases'].size).to be > 0
           assigns['cases'].each do |loe_case|
@@ -64,7 +68,11 @@ RSpec.describe CasesController, type: :controller do
       end
       describe 'full_address' do
         let(:full_address) { LoeCase.where('full_address is not ?',nil).sample.full_address }
+        let(:new_select_for_index) do
+          controller.send(:select_for_index) + [:full_address]
+        end
         it 'returns results filtered by full_address' do
+          allow_any_instance_of(CasesController).to receive(:select_for_index).and_return(new_select_for_index)
           get :index, filters: { full_address: full_address }
           expect(assigns['cases'].size).to be > 0
           assigns['cases'].each do |loe_case|
@@ -117,6 +125,8 @@ RSpec.describe CasesController, type: :controller do
       expect(response.code).to eq("200")
       expect(assigns['case']).to be_a(LoeCase)
       expect(assigns['case'].case_number).to eq(expected.case_number)
+      expect(assigns['case'].association_cache.keys.include?(:violations)).to eq(true)
+      expect(assigns['case'].association_cache.keys.include?(:inspections)).to eq(true)
     end
   end
 
@@ -162,6 +172,14 @@ RSpec.describe CasesController, type: :controller do
     let(:expected) { [:entry_date, :case_number] }
     let(:actual) { controller.send(:valid_sorts) }
     it 'returns an array of valid attributes for sorting' do
+      expect(actual).to eq(expected)
+    end
+  end
+
+  describe 'select_for_index' do
+    let(:expected) { [:id, :case_number, :case_notes, :entry_date] }
+    let(:actual) { controller.send(:select_for_index) }
+    it do
       expect(actual).to eq(expected)
     end
   end

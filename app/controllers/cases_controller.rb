@@ -7,12 +7,13 @@ class CasesController < ApplicationController
     sort += " #{(['ASC', 'DESC'] && [params[:sort_dir]]).first}"
     @cases = LoeCase.filter(params[:filters].slice(*valid_filters))
       .order(sort)
+      .select(select_for_index)
       .page params[:page]
   end
 
   def show
     @case = Rails.cache.fetch("cases_show_#{params[:id]}}") do
-      LoeCase.find params[:id]
+      LoeCase.where(id: params[:id]).eager_load(:violations, :inspections).first
     end
   end
 
@@ -47,6 +48,10 @@ class CasesController < ApplicationController
 
   def valid_sorts
     [:entry_date, :case_number]
+  end
+
+  def select_for_index
+    [:id, :case_number, :case_notes, :entry_date]
   end
 
 end
