@@ -4,7 +4,12 @@
 @import "bootstrap-datepicker3";
 
 // media queries
-@media (min-width: 0px) and (max-width: 670px) {
+@media (min-width: 0px) and (max-width: 480px) {
+  header h1 {
+    display: none !important;
+  }
+}
+@media (min-width: 481px) and (max-width: 670px) {
   header h1 {
     font-size: 18px;
   }
@@ -80,4 +85,10 @@ header {
   padding-right: 15px;
   background-image: url(<%= asset_path('greensboro.png') %>);
   background-repeat: no-repeat;
+}
+.google-maps-iframe {
+  border: 0 none;
+  width: 100%;
+  height: 100vh;
+  max-height: 500px;
 }
