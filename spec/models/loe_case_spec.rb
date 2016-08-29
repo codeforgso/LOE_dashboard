@@ -69,49 +69,27 @@ RSpec.describe LoeCase, type: :model do
       end
     end
 
-    describe 'st_name' do
-      let(:subject) { LoeCase.st_name(st_name) }
-      let(:st_name) { LoeCase.where('st_name is not ?',nil).sample.st_name }
-      it 'returns records with matching :st_name' do
-        expect(st_name).to be_a(String)
-        expect(st_name).not_to eq('')
-        expect(subject.size).to be > 0
-        subject.each do |loe_case|
-          expect(loe_case.st_name).to eq(st_name)
-        end
-      end
-
-      describe 'with lowercased st_name' do
-        let(:subject) { LoeCase.st_name(st_name.downcase) }
-        it 'returns results with case insensitive st_name match' do
+    [:full_address, :st_name].each do |attribute|
+      describe "#{attribute}" do
+        let(:subject) { LoeCase.send(attribute, query) }
+        let(:query) { LoeCase.where("#{attribute} is not ?",nil).sample.send(attribute) }
+        it "returns records with matching #{attribute}" do
+          expect(query).to be_a(String)
+          expect(query).not_to eq('')
           expect(subject.size).to be > 0
           subject.each do |loe_case|
-            expect(loe_case.st_name).to eq(st_name)
-            expect(loe_case.st_name).not_to eq(st_name.downcase)
+            expect(loe_case.send(attribute)).to eq(query)
           end
         end
-      end
-    end
 
-    describe 'full_address' do
-      let(:subject) { LoeCase.full_address(full_address) }
-      let(:full_address) { LoeCase.where('full_address is not ?',nil).sample.full_address }
-      it 'returns records with matching :full_address' do
-        expect(full_address).to be_a(String)
-        expect(full_address).not_to eq('')
-        expect(subject.size).to be > 0
-        subject.each do |loe_case|
-          expect(loe_case.full_address).to eq(full_address)
-        end
-      end
-
-      describe 'with lowercased full_address' do
-        let(:subject) { LoeCase.full_address(full_address.downcase) }
-        it 'returns results with case insensitive full_address match' do
-          expect(subject.size).to be > 0
-          subject.each do |loe_case|
-            expect(loe_case.full_address).to eq(full_address)
-            expect(loe_case.full_address).not_to eq(full_address.downcase)
+        describe "with lowercased #{attribute}" do
+          let(:subject) { LoeCase.send(attribute, query.downcase) }
+          it "returns results with case insensitive #{attribute} match" do
+            expect(subject.size).to be > 0
+            subject.each do |loe_case|
+              expect(loe_case.send(attribute)).to eq(query)
+              expect(loe_case.send(attribute)).not_to eq(query.downcase)
+            end
           end
         end
       end
@@ -149,6 +127,7 @@ RSpec.describe LoeCase, type: :model do
         end
       end
     end
+
   end
 
   describe 'google_maps_query' do
