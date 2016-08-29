@@ -64,6 +64,7 @@ class LoeCase < ActiveRecord::Base
   scope :open, -> { where case_status_id: CaseStatus.open.id }
   scope :closed, -> { where case_status_id: CaseStatus.closed.id }
   scope :use_code, -> (use_code) { where(use_code_id: use_code) }
+  scope :owner_name, -> (owner_name) { where('upper(owner_name) = ?', owner_name.try(:upcase)) }
 
   def google_maps_query
     "#{full_address}, #{city}, #{state}"

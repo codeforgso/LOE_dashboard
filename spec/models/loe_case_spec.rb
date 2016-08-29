@@ -69,7 +69,7 @@ RSpec.describe LoeCase, type: :model do
       end
     end
 
-    [:full_address, :st_name].each do |attribute|
+    [:full_address, :st_name, :owner_name].each do |attribute|
       describe "#{attribute}" do
         let(:subject) { LoeCase.send(attribute, query) }
         let(:query) { LoeCase.where("#{attribute} is not ?",nil).sample.send(attribute) }
