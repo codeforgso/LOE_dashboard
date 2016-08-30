@@ -17,7 +17,6 @@ RSpec.describe CasesController, type: :controller do
       expect(assigns['cases'].size).to be > 0
       expect(assigns['cases'].size).to eq(expected_count)
     end
-
     describe 'with search filters' do
       describe 'valid_filters' do
         let(:valid_filters) { controller.send :valid_filters }
@@ -52,36 +51,25 @@ RSpec.describe CasesController, type: :controller do
           end
         end
       end
-      describe 'st_name' do
-        let(:st_name) { LoeCase.where('st_name is not ?',nil).sample.st_name }
-        let(:new_select_for_index) do
-          controller.send(:select_for_index) + [:st_name]
-        end
-        it 'returns results filtered by st_name' do
-          allow_any_instance_of(CasesController).to receive(:select_for_index).and_return(new_select_for_index)
-          get :index, filters: { st_name: st_name }
-          expect(assigns['cases'].size).to be > 0
-          assigns['cases'].each do |loe_case|
-            expect(loe_case.st_name).to eq(st_name)
+      [:st_name, :full_address, :owner_name].each do |attribute|
+        describe "#{attribute}" do
+          let(:subject) { LoeCase.where("#{attribute} is not ?",nil).sample.send(attribute) }
+          let(:new_select_for_index) do
+            controller.send(:select_for_index) + [attribute]
           end
-        end
-      end
-      describe 'full_address' do
-        let(:full_address) { LoeCase.where('full_address is not ?',nil).sample.full_address }
-        let(:new_select_for_index) do
-          controller.send(:select_for_index) + [:full_address]
-        end
-        it 'returns results filtered by full_address' do
-          allow_any_instance_of(CasesController).to receive(:select_for_index).and_return(new_select_for_index)
-          get :index, filters: { full_address: full_address }
-          expect(assigns['cases'].size).to be > 0
-          assigns['cases'].each do |loe_case|
-            expect(loe_case.full_address).to eq(full_address)
+          it "returns results filtered by #{attribute}" do
+            allow_any_instance_of(CasesController).to receive(:select_for_index).and_return(new_select_for_index)
+            params = { filters: {} }
+            params[:filters][attribute] =  subject
+            get :index, params
+            expect(assigns['cases'].size).to be > 0
+            assigns['cases'].each do |loe_case|
+              expect(loe_case.send(attribute)).to eq(subject)
+            end
           end
         end
       end
     end
-
     context 'with sort parameters' do
       [nil, :entry_date, :case_number].each do |sort_param|
         context "with #{sort_param.nil? ? 'nil' : sort_param} as :sort" do
@@ -117,7 +105,6 @@ RSpec.describe CasesController, type: :controller do
       end
     end
   end
-
   describe 'GET #show' do
     let(:expected) { create :loe_case }
     it 'assigns @loe_case' do
@@ -183,5 +170,4 @@ RSpec.describe CasesController, type: :controller do
       expect(actual).to eq(expected)
     end
   end
-
 end

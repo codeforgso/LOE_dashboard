@@ -25,8 +25,7 @@ class CasesController < ApplicationController
         .select("distinct(#{params[:param]})").limit(8).map do |c|
           { name: c[params[:param]].to_s }
         end
-    when :st_name, :full_address
-      # where = LoeCase.arel_table[params[:param].to_sym].matches("#{params[:q]}%")
+    when :st_name, :full_address, :owner_name
       where = ["#{params[:param]} ilike ?","#{params[:q]}%"]
       LoeCase.where(where).order(params[:param])
         .select("distinct(#{params[:param]})").limit(8).map do |c|
@@ -42,7 +41,7 @@ class CasesController < ApplicationController
   def valid_filters
     [
       :case_number, :entry_date_range, :st_name, :full_address,
-      :use_code
+      :use_code, :owner_name
     ]
   end
 
