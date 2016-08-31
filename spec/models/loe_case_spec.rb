@@ -18,6 +18,7 @@ RSpec.describe LoeCase, type: :model do
     it { expect(loe_case).to have_many(:violations) }
     it { expect(loe_case).to belong_to(:case_status) }
     it { expect(loe_case).to belong_to(:use_code) }
+    it { expect(loe_case).to belong_to(:rental_status) }
   end
 
   describe 'scopes' do
@@ -26,7 +27,8 @@ RSpec.describe LoeCase, type: :model do
         opts = {
           entry_date: (n%2==0 ? Date.today : Date.today.next).to_time,
           case_status: n%2==0 ? case_status_open : case_status_closed,
-          use_code: n%2==0 ? use_code1 : use_code2
+          use_code: n%2==0 ? use_code1 : use_code2,
+          rental_status: n%2==0 ? rental_status1 : rental_status2
         }
         create :loe_case, opts
       end
@@ -36,6 +38,8 @@ RSpec.describe LoeCase, type: :model do
     let(:case_status_closed) { create :case_status_closed }
     let(:use_code1) { create :use_code }
     let(:use_code2) { create :use_code }
+    let(:rental_status1) { create :rental_status }
+    let(:rental_status2) { create :rental_status }
 
     describe 'case_number' do
       it 'returns records for a given case_number' do
@@ -117,13 +121,16 @@ RSpec.describe LoeCase, type: :model do
       end
     end
 
-    describe 'use_code' do
-      let(:actual) { LoeCase.use_code(use_code1.id) }
-      it 'returns records that match use_code_id' do
-        expect(LoeCase).to respond_to(:use_code)
-        expect(actual.size).to eq(total_count/2)
-        actual.each do |loe_case|
-          expect(loe_case.use_code_id).to eq(use_code1.id)
+    [:use_code, :rental_status].each do |attribute|
+      describe "#{attribute}" do
+        let(:actual) { LoeCase.send(attribute, expected) }
+        let(:expected) { send("#{attribute}1").id }
+        it "returns records that match #{attribute}_id" do
+          expect(LoeCase).to respond_to(attribute)
+          expect(actual.size).to eq(total_count / 2)
+          actual.each do |loe_case|
+            expect(loe_case.send("#{attribute}_id".to_sym)).to eq(expected)
+          end
         end
       end
     end

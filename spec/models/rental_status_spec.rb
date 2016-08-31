@@ -11,4 +11,8 @@ RSpec.describe RentalStatus, type: :model do
     it { expect(rental_status).to validate_presence_of(:name) }
     it { expect(rental_status).to validate_uniqueness_of(:name) }
   end
+
+  describe 'ActiveRecord associations' do
+    it { expect(rental_status).to have_many(:loe_cases) }
+  end
 end

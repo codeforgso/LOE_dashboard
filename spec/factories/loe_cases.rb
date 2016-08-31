@@ -23,11 +23,11 @@ FactoryGirl.define do
     owner_mailzip             {Faker::Address.zip}
     owner_name                {Faker::Name.name}
     owner_name2               {Faker::Name.name}
-    rental_status             {Faker::Lorem.words.join(' ')}
     zoning                    {Faker::Lorem.words.join(' ')}
     st_name                   {Faker::Address.street_name.upcase}
     full_address              {Faker::Address.street_address}
     case_status
     use_code
+    rental_status
   end
 end

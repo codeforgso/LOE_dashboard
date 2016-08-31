@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160830014423) do
+ActiveRecord::Schema.define(version: 20160830015431) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -80,7 +80,6 @@ ActiveRecord::Schema.define(version: 20160830014423) do
     t.string   "owner_mailzip"
     t.string   "owner_name"
     t.string   "owner_name2"
-    t.string   "rental_status"
     t.string   "zoning"
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
@@ -97,10 +96,12 @@ ActiveRecord::Schema.define(version: 20160830014423) do
     t.float    "y_coord"
     t.integer  "case_status_id"
     t.integer  "use_code_id"
+    t.integer  "rental_status_id"
   end
 
   add_index "loe_cases", ["case_number"], name: "index_loe_cases_on_case_number", unique: true, using: :btree
   add_index "loe_cases", ["case_status_id"], name: "index_loe_cases_on_case_status_id", using: :btree
+  add_index "loe_cases", ["rental_status_id"], name: "index_loe_cases_on_rental_status_id", using: :btree
   add_index "loe_cases", ["use_code_id"], name: "index_loe_cases_on_use_code_id", using: :btree
 
   create_table "rental_statuses", force: :cascade do |t|

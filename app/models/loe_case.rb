@@ -24,7 +24,6 @@ class LoeCase < ActiveRecord::Base
     "ownermailzip" => "owner_mailzip",
     "ownername" => "owner_name",
     "ownername2" => "owner_name2",
-    "rentalstatus" => "rental_status",
     "stapt" => "st_apt",
     "stname" => "st_name",
     "stnumber" => "st_number",
@@ -37,6 +36,7 @@ class LoeCase < ActiveRecord::Base
   has_many :violations, -> { order(:case_sakey) }
   belongs_to :case_status
   belongs_to :use_code
+  belongs_to :rental_status
 
   scope :case_number, -> (case_number) { where case_number: case_number }
   scope :entry_date_range, -> (entry_date_range) do
@@ -65,6 +65,7 @@ class LoeCase < ActiveRecord::Base
   scope :closed, -> { where case_status_id: CaseStatus.closed.id }
   scope :use_code, -> (use_code) { where(use_code_id: use_code) }
   scope :owner_name, -> (owner_name) { where('upper(owner_name) = ?', owner_name.try(:upcase)) }
+  scope :rental_status, -> (rental_status) { where(rental_status_id: rental_status) }
 
   def google_maps_query
     "#{full_address}, #{city}, #{state}"
@@ -80,7 +81,8 @@ class LoeCase < ActiveRecord::Base
       col = self.class::SOCRATA_ATTRIBUTE_REMAPPING[key] || key
       relations = {
         'casestatus' => CaseStatus,
-        'usecode' => UseCode
+        'usecode' => UseCode,
+        'rentalstatus' => RentalStatus
       }
       if relations.keys.include?(col.to_s)
         opts = { name: socrata_result[key].strip }
