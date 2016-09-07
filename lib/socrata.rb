@@ -76,8 +76,16 @@ class Socrata
     Kaminari.paginate_array(arr).page(page)
   end
 
-  def self.seed(klass,dataset_id)
-    klass.delete_all
+  def self.seed(klass,dataset_id,offset=nil,batch_mode=nil)
+    # Socrata.seed Violation, Socrata.violation_dataset_id, Violation.count
+    klass.delete_all unless offset
+    batch_mode = true if batch_mode.nil?
+    cache = {}
+    if %w(Inspection Violation).include?(klass.to_s)
+      LoeCase.select('id, case_number').each do |loe_case|
+        cache[loe_case.case_number] = loe_case.id
+      end
+    end
     socrata = self.new
     total_record_count = socrata.client.get(dataset_id, {'$select' => 'count(*)'})[0]['count'].to_i || 0
     batch_size = 1000
@@ -86,15 +94,25 @@ class Socrata
         '$limit' => batch_size,
         '$offset' => n * batch_size
       }
-      items = []
-      socrata.client.get(dataset_id,opts).each do |socrata_item|
-        item = klass.new
-        item.assign_from_socrata socrata_item
-        items << item
-        print "."
+      skip = false
+      if offset and offset.kind_of?(Fixnum)
+        skip = opts['$offset'] > offset
       end
-      klass.import items
-      print "*"
+      unless skip
+        items = []
+        socrata.client.get(dataset_id,opts).each do |socrata_item|
+          item = klass.new
+          item.assign_from_socrata socrata_item, cache
+          if batch_mode
+            items << item
+          else
+            item.save
+          end
+          print "."
+        end
+        klass.import(items) if batch_mode
+        print "*"
+      end
     end
   end
 
