@@ -26,7 +26,9 @@ RSpec.describe CasesController, type: :controller do
           valid_filters.each do |key|
             expect(LoeCase).to respond_to(key)
           end
-          expect(valid_filters.include?(:use_code)).to eq(true)
+          [:use_code, :rental_status].each do |attribute|
+            expect(valid_filters.include?(attribute)).to eq(true)
+          end
         end
       end
       describe 'case_number' do

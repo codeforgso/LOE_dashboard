@@ -13,22 +13,29 @@ require 'nokogiri'
 # end
 RSpec.describe CasesHelper, type: :helper do
 
-  describe 'options_for_use_code' do
-    before do
-      5.times { create(:use_code) }
-    end
-    let(:random_use_code) { UseCode.all.sample }
-    [false, true].each do |do_select|
-      describe "with #{do_select ? 'a' : 'no'} use_code selected" do
-        let(:selected) { do_select ? random_use_code.id : nil}
-        let(:actual) { helper.options_for_use_code(selected) }
-        it 'returns options for select' do
-          doc = Nokogiri::HTML.parse(actual)
-          if do_select
-            expect(doc.css("option[selected][value='#{selected}']").size).to eq(1)
-            expect(doc.css("option[selected]").text).to eq(random_use_code.name)
-          else
-            expect(doc.css('option[selected]').size).to eq(0)
+  [UseCode, RentalStatus].each do |klass|
+    describe "options_for_#{klass.model_name.param_key}" do
+      before do
+        expected_count.times { create(param) }
+      end
+      let(:param) { klass.model_name.param_key.to_sym }
+      let(:method) { "options_for_#{param}".to_sym }
+      let(:expected_count) { 5 }
+      let(:random_option) { klass.all.sample }
+      [false, true].each do |do_select|
+        describe "with #{do_select ? 'a' : 'no'} #{klass.model_name.param_key} selected" do
+          let(:selected) { do_select ? random_option.id : nil}
+          let(:actual) { helper.send(method, selected) }
+          it 'returns options for select' do
+            expect(klass.all.size).to eq(expected_count)
+            expect(random_option).to be_a(klass)
+            doc = Nokogiri::HTML.parse(actual)
+            if do_select
+              expect(doc.css("option[selected][value='#{selected}']").size).to eq(1)
+              expect(doc.css("option[selected]").text).to eq(random_option.name)
+            else
+              expect(doc.css('option[selected]').size).to eq(0)
+            end
           end
         end
       end

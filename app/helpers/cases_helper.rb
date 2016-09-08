@@ -1,7 +1,11 @@
 module CasesHelper
 
   def options_for_use_code(selected=nil)
-    options_from_collection_for_select UseCode.all.order(:name), :id, :name, selected
+    options_for_relation UseCode, selected
+  end
+
+  def options_for_rental_status(selected=nil)
+    options_for_relation RentalStatus, selected
   end
 
   def sort_dir(attribute)
@@ -38,6 +42,12 @@ module CasesHelper
     end.compact + [
       "#{address_city}, #{address_state} #{address_zip}"
     ]
+  end
+
+  private
+
+  def options_for_relation(klass, selected=nil)
+    options_from_collection_for_select klass.all.order(:name), :id, :name, selected
   end
 
 end
