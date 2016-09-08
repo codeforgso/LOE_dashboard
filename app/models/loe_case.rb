@@ -71,9 +71,9 @@ class LoeCase < ActiveRecord::Base
     "#{full_address}, #{city}, #{state}"
   end
 
-  def self.seed
+  def self.seed(offset=nil, batch_mode=nil)
     Rails.cache.clear
-    Socrata.seed self, Socrata.case_dataset_id
+    Socrata.seed(self, Socrata.case_dataset_id, offset, batch_mode)
   end
 
   def assign_from_socrata(socrata_result)
@@ -105,7 +105,25 @@ class LoeCase < ActiveRecord::Base
           if val.length==4
             val += "/01/01"
           end
-          self[col.to_sym] = Date.parse val
+          begin
+            self[col.to_sym] =  case val
+                                when /^\s*\d+\s+\d+\s+\d{4}\s*$/
+                                  Date.strptime(val,"%m %d %Y")
+                                else
+                                  Date.parse val
+                                end
+          rescue ArgumentError => e
+            dbg = {
+              file: File.basename(__FILE__),
+              line: __LINE__,
+              val: val,
+              col: col,
+              key: key,
+              raw: socrata_result[key]
+            }
+            puts dbg.to_json
+            raise e
+          end
           if self[col.to_sym] > Date.today
             self[col.to_sym] = self[col.to_sym].to_time.advance(years: -100).to_date
           end
