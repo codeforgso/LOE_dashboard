@@ -38,19 +38,21 @@ RSpec.describe "cases/show", type: :view do
                     assert_select 'h3', text: 'Case Notes'
                     assert_select 'pre', text: @case.case_notes
                     assert_select 'h3', text: 'Owner Information'
+                    assert_select 'hr.hidden-md.hidden-lg'
+                    assert_select 'h3.hidden-md.hidden-lg', text: 'Property Location'
                     assert_select 'address', text: /#{Regexp.escape(@case.owner_name)}/
                   end
                 when :inspections
                   expect(@case.inspections.size).to eq(expected_count)
                   assert_select 'div', text: 'There are no inspections for this case.', count: (expected_count == 0 ? 1 : 0)
-                  assert_select 'ul', count: (expected_count == 0 ? 0 : 1) do
-                    assert_select 'li', count: expected_count
+                  assert_select 'div#inspection_accordion', count: (expected_count == 0 ? 0 : 1) do
+                    assert_select '.panel-body', count: expected_count
                   end
                 when :violations
                   expect(@case.violations.size).to eq(expected_count)
                   assert_select 'div', text: 'There are no violations for this case.', count: (expected_count == 0 ? 1 : 0)
-                  assert_select 'ul', count: (expected_count == 0 ? 0 : 1) do
-                    assert_select 'li', count: expected_count
+                  assert_select 'div#violation_accordion', count: (expected_count == 0 ? 0 : 1) do
+                    assert_select '.panel-body', count: expected_count
                   end
                 when :details
                   assert_select 'pre', text: @case.attributes.to_yaml
