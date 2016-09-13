@@ -11,4 +11,8 @@ RSpec.describe CaseType, type: :model do
     it { expect(case_type).to validate_presence_of(:name) }
     it { expect(case_type).to validate_uniqueness_of(:name) }
   end
+
+  describe 'ActiveRecord associations' do
+    it { expect(case_type).to have_many(:loe_cases) }
+  end
 end

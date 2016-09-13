@@ -9,7 +9,6 @@ class LoeCase < ActiveRecord::Base
     "assignedinspcode" => "assigned_inspector_code",
     "casenotes" => "case_notes",
     "casenumber" => "case_number",
-    "casetype" => "case_type",
     "censustract" => "census_tract",
     "closedate" => "close_date",
     "closereason" => "close_reason",
@@ -37,6 +36,7 @@ class LoeCase < ActiveRecord::Base
   belongs_to :case_status
   belongs_to :use_code
   belongs_to :rental_status
+  belongs_to :case_type
 
   scope :case_number, -> (case_number) { where case_number: case_number }
   scope :entry_date_range, -> (entry_date_range) do
@@ -66,6 +66,7 @@ class LoeCase < ActiveRecord::Base
   scope :use_code, -> (use_code) { where(use_code_id: use_code) }
   scope :owner_name, -> (owner_name) { where('upper(owner_name) = ?', owner_name.try(:upcase)) }
   scope :rental_status, -> (rental_status) { where(rental_status_id: rental_status) }
+  scope :case_type, -> (case_type) { where(case_type_id: case_type) }
 
   def google_maps_query
     "#{full_address}, #{city}, #{state}"
@@ -82,7 +83,8 @@ class LoeCase < ActiveRecord::Base
       relations = {
         'casestatus' => CaseStatus,
         'usecode' => UseCode,
-        'rentalstatus' => RentalStatus
+        'rentalstatus' => RentalStatus,
+        'casetype' => CaseType
       }
       if relations.keys.include?(col.to_s)
         opts = { name: socrata_result[key].strip }

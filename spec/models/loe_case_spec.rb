@@ -19,6 +19,7 @@ RSpec.describe LoeCase, type: :model do
     it { expect(loe_case).to belong_to(:case_status) }
     it { expect(loe_case).to belong_to(:use_code) }
     it { expect(loe_case).to belong_to(:rental_status) }
+    it { expect(loe_case).to belong_to(:case_type) }
   end
 
   describe 'scopes' do
@@ -28,7 +29,8 @@ RSpec.describe LoeCase, type: :model do
           entry_date: (n%2==0 ? Date.today : Date.today.next).to_time,
           case_status: n%2==0 ? case_status_open : case_status_closed,
           use_code: n%2==0 ? use_code1 : use_code2,
-          rental_status: n%2==0 ? rental_status1 : rental_status2
+          rental_status: n%2==0 ? rental_status1 : rental_status2,
+          case_type: n%2==0 ? case_type1 : case_type2
         }
         create :loe_case, opts
       end
@@ -40,6 +42,8 @@ RSpec.describe LoeCase, type: :model do
     let(:use_code2) { create :use_code }
     let(:rental_status1) { create :rental_status }
     let(:rental_status2) { create :rental_status }
+    let(:case_type1) { create :case_type }
+    let(:case_type2) { create :case_type }
 
     describe 'case_number' do
       it 'returns records for a given case_number' do
@@ -121,7 +125,7 @@ RSpec.describe LoeCase, type: :model do
       end
     end
 
-    [:use_code, :rental_status].each do |attribute|
+    [:use_code, :rental_status, :case_type].each do |attribute|
       describe "#{attribute}" do
         let(:actual) { LoeCase.send(attribute, expected) }
         let(:expected) { send("#{attribute}1").id }

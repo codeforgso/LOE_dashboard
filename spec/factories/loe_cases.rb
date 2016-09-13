@@ -8,7 +8,6 @@ FactoryGirl.define do
     assignment                {Faker::Lorem.words.join(' ')}
     case_notes                {Faker::Lorem.paragraphs.join("\n\n")}
     sequence(:case_number)    { |n| Time.parse("2011/01/01").advance(days: n).strftime("%Y%m%d") }
-    case_type                 {Faker::Lorem.words.join(' ')}
     census_tract              {Faker::Lorem.words.join(' ')}
     close_date                {Time.now.advance(days: Faker::Number.between(1, 10000))}
     close_reason              {Faker::Lorem.words.join(' ')}
@@ -29,5 +28,6 @@ FactoryGirl.define do
     case_status
     use_code
     rental_status
+    case_type
   end
 end
