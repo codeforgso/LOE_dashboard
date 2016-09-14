@@ -77,7 +77,8 @@ class LoeCase < ActiveRecord::Base
     Socrata.seed(self, Socrata.case_dataset_id, offset, batch_mode)
   end
 
-  def assign_from_socrata(socrata_result)
+  def assign_from_socrata(socrata_result, cache=nil)
+    cache ||= {}
     socrata_result.keys.each do |key|
       col = self.class::SOCRATA_ATTRIBUTE_REMAPPING[key] || key
       relations = {
