@@ -60,7 +60,8 @@ class Violation < ActiveRecord::Base
     Socrata.seed self, Socrata.violation_dataset_id
   end
 
-  def assign_from_socrata(socrata_result)
+  def assign_from_socrata(socrata_result, cache=nil)
+    cache ||= {}
     socrata_result.keys.each do |key|
       col = self.class::SOCRATA_ATTRIBUTE_REMAPPING[key] || key
       raise "undefined attribute: #{key}\n#{socrata_result.to_json}" unless self.class.column_names.include?(col)
@@ -69,7 +70,11 @@ class Violation < ActiveRecord::Base
         when "case_sakey", "case_number", "violation_sakey", "number_of_items"
           self[col.to_sym] = socrata_result[key].strip.to_i
           if col == "case_number"
-            self.loe_case_id = LoeCase.where('case_number = ?',self[col.to_sym]).limit(1).select('id').first.try(:id)
+            if cache[self[col.to_sym]]
+              self.loe_case_id = cache[self[col.to_sym]]
+            else
+              self.loe_case_id = LoeCase.where('case_number = ?',self[col.to_sym]).limit(1).select('id').first.try(:id)
+            end
           end
         when "clear_date", "entry_date", "last_update", "issued_date", "reissue_date"
           begin

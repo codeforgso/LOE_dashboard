@@ -1,6 +1,111 @@
-<h1>Case Detail</h1>
-<pre><%= @case.attributes.to_yaml %></pre>
-<%= link_to 'Case Inspections', inspections_path(filters: {'case': @case.id}) %><br />
-<%= link_to 'Case Violations', violations_path(filters: {'case': @case.id}) %><br />
-<%= link_to 'Case Histories', case_histories_path(filters: {'case': @case.case_number}) %><br />
+<h1>
+  Case Detail
+  <small>Case #<%= @case.case_number %></small>
+</h1>
+<div>
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active">
+      <a href="#summary" aria-controls="summary" role="tab">Summary</a>
+    </li>
+    <li role="presentation">
+      <a href="#inspections" aria-controls="inspections" role="tab">Inspections</a>
+    </li>
+    <li role="presentation">
+      <a href="#violations" aria-controls="violations" role="tab">Violations</a>
+    </li>
+    <li role="presentation">
+      <a href="#details" aria-controls="details" role="tab">Details</a>
+    </li>
+  </ul>
+  <div class="tab-content panel panel-default border-top-none">
+    <div role="tabpanel" class="tab-pane panel-body border-top-none active" id="summary">
+      <div class="row">
+        <div class="col-md-6">
+          <div>
+            <% case_items(@case).each do |item| %>
+              <dl class="dl-horizontal">
+                <dt><%= item[:label] %></dt>
+                <dd><%= item[:value] %></dd>
+              </dl>
+            <% end %>
+          </div>
+          <h3>Case Notes</h3>
+          <pre style="white-space: pre-wrap;"><%= @case.case_notes %></pre>
+          <div>
+            <h3>Owner Information</h3>
+            <address>
+              <strong><%= @case.owner_name %></strong><br />
+              <% case_address_items(@case, owner: true).each do |item| %>
+                <%= item %><br />
+              <% end %>
+            </address>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <hr class="hidden-lg hidden-md" />
+          <h3 class="hidden-lg hidden-md">Property Location</h3>
+          <address>
+            <strong></strong>
+            <% case_address_items(@case).each do |item| %>
+              <%= item %><br />
+            <% end %>
+          </address>
+          <div class="google-maps-iframe-wrapper" data-google-maps-iframe-wrapper="true" data-google-maps-query="<%= @case.google_maps_query %>">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div role="tabpanel" class="tab-pane panel-body border-top-none" id="inspections">
+      <% if @case.inspections.size == 0 %>
+        There are no inspections for this case.
+      <% else %>
+        <div class="panel-group" id="inspection_accordion" role="tablist" aria-multiselectable="true">
+          <div class="panel panel-default">
+            <% @case.inspections.each_with_index do |inspection, idx| %>
+              <div class="panel-heading" role="tab" id="inspection_heading<%= idx %>">
+                <h4 class="panel-title">
+                  <a role="button" data-toggle="collapse" data-target="#inspection_collapse<%= idx %>" data-parent="#inspection_accordion" aria-expanded="false" aria-controls="inspection_collapse<%= idx %>">
+                    Inspection #<%= idx + 1 %>
+                  </a>
+                </h4>
+              </div>
+              <div id="inspection_collapse<%= idx %>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="inspection_heading<%= idx %>">
+                <div class="panel-body">
+                  <pre><%= inspection.attributes.to_yaml %></pre>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <div role="tabpanel" class="tab-pane panel-body border-top-none" id="violations">
+      <% if @case.violations.size == 0 %>
+        There are no violations for this case.
+      <% else %>
+        <div class="panel-group" id="violation_accordion" role="tablist" aria-multiselectable="true">
+          <div class="panel panel-default">
+            <% @case.violations.each_with_index do |violation, idx| %>
+              <div class="panel-heading" role="tab" id="violation_heading<%= idx %>">
+                <h4 class="panel-title">
+                  <a role="button" data-toggle="collapse" data-target="#violation_collapse<%= idx %>" data-parent="#violation_accordion" aria-expanded="false" aria-controls="violation_collapse<%= idx %>">
+                    Violation #<%= idx + 1 %>
+                  </a>
+                </h4>
+              </div>
+              <div id="violation_collapse<%= idx %>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="violation_heading<%= idx %>">
+                <div class="panel-body">
+                  <pre><%= violation.attributes.to_yaml %></pre>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <div role="tabpanel" class="tab-pane panel-body border-top-none" id="details">
+      <pre><%= @case.attributes.to_yaml %></pre>
+    </div>
+  </div>
+</div>
 <%= link_to 'Browse Cases', cases_path %>

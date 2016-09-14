@@ -18,6 +18,8 @@ RSpec.describe LoeCase, type: :model do
     it { expect(loe_case).to have_many(:violations) }
     it { expect(loe_case).to belong_to(:case_status) }
     it { expect(loe_case).to belong_to(:use_code) }
+    it { expect(loe_case).to belong_to(:rental_status) }
+    it { expect(loe_case).to belong_to(:case_type) }
   end
 
   describe 'scopes' do
@@ -26,7 +28,9 @@ RSpec.describe LoeCase, type: :model do
         opts = {
           entry_date: (n%2==0 ? Date.today : Date.today.next).to_time,
           case_status: n%2==0 ? case_status_open : case_status_closed,
-          use_code: n%2==0 ? use_code1 : use_code2
+          use_code: n%2==0 ? use_code1 : use_code2,
+          rental_status: n%2==0 ? rental_status1 : rental_status2,
+          case_type: n%2==0 ? case_type1 : case_type2
         }
         create :loe_case, opts
       end
@@ -36,6 +40,10 @@ RSpec.describe LoeCase, type: :model do
     let(:case_status_closed) { create :case_status_closed }
     let(:use_code1) { create :use_code }
     let(:use_code2) { create :use_code }
+    let(:rental_status1) { create :rental_status }
+    let(:rental_status2) { create :rental_status }
+    let(:case_type1) { create :case_type }
+    let(:case_type2) { create :case_type }
 
     describe 'case_number' do
       it 'returns records for a given case_number' do
@@ -69,49 +77,27 @@ RSpec.describe LoeCase, type: :model do
       end
     end
 
-    describe 'st_name' do
-      let(:subject) { LoeCase.st_name(st_name) }
-      let(:st_name) { LoeCase.where('st_name is not ?',nil).sample.st_name }
-      it 'returns records with matching :st_name' do
-        expect(st_name).to be_a(String)
-        expect(st_name).not_to eq('')
-        expect(subject.size).to be > 0
-        subject.each do |loe_case|
-          expect(loe_case.st_name).to eq(st_name)
-        end
-      end
-
-      describe 'with lowercased st_name' do
-        let(:subject) { LoeCase.st_name(st_name.downcase) }
-        it 'returns results with case insensitive st_name match' do
+    [:full_address, :st_name, :owner_name].each do |attribute|
+      describe "#{attribute}" do
+        let(:subject) { LoeCase.send(attribute, query) }
+        let(:query) { LoeCase.where("#{attribute} is not ?",nil).sample.send(attribute) }
+        it "returns records with matching #{attribute}" do
+          expect(query).to be_a(String)
+          expect(query).not_to eq('')
           expect(subject.size).to be > 0
           subject.each do |loe_case|
-            expect(loe_case.st_name).to eq(st_name)
-            expect(loe_case.st_name).not_to eq(st_name.downcase)
+            expect(loe_case.send(attribute)).to eq(query)
           end
         end
-      end
-    end
 
-    describe 'full_address' do
-      let(:subject) { LoeCase.full_address(full_address) }
-      let(:full_address) { LoeCase.where('full_address is not ?',nil).sample.full_address }
-      it 'returns records with matching :full_address' do
-        expect(full_address).to be_a(String)
-        expect(full_address).not_to eq('')
-        expect(subject.size).to be > 0
-        subject.each do |loe_case|
-          expect(loe_case.full_address).to eq(full_address)
-        end
-      end
-
-      describe 'with lowercased full_address' do
-        let(:subject) { LoeCase.full_address(full_address.downcase) }
-        it 'returns results with case insensitive full_address match' do
-          expect(subject.size).to be > 0
-          subject.each do |loe_case|
-            expect(loe_case.full_address).to eq(full_address)
-            expect(loe_case.full_address).not_to eq(full_address.downcase)
+        describe "with lowercased #{attribute}" do
+          let(:subject) { LoeCase.send(attribute, query.downcase) }
+          it "returns results with case insensitive #{attribute} match" do
+            expect(subject.size).to be > 0
+            subject.each do |loe_case|
+              expect(loe_case.send(attribute)).to eq(query)
+              expect(loe_case.send(attribute)).not_to eq(query.downcase)
+            end
           end
         end
       end
@@ -139,15 +125,28 @@ RSpec.describe LoeCase, type: :model do
       end
     end
 
-    describe 'use_code' do
-      let(:actual) { LoeCase.use_code(use_code1.id) }
-      it 'returns records that match use_code_id' do
-        expect(LoeCase).to respond_to(:use_code)
-        expect(actual.size).to eq(total_count/2)
-        actual.each do |loe_case|
-          expect(loe_case.use_code_id).to eq(use_code1.id)
+    [:use_code, :rental_status, :case_type].each do |attribute|
+      describe "#{attribute}" do
+        let(:actual) { LoeCase.send(attribute, expected) }
+        let(:expected) { send("#{attribute}1").id }
+        it "returns records that match #{attribute}_id" do
+          expect(LoeCase).to respond_to(attribute)
+          expect(actual.size).to eq(total_count / 2)
+          actual.each do |loe_case|
+            expect(loe_case.send("#{attribute}_id".to_sym)).to eq(expected)
+          end
         end
       end
+    end
+
+  end
+
+  describe 'google_maps_query' do
+    let(:expected) do
+      "#{loe_case.full_address}, #{loe_case.city}, #{loe_case.state}"
+    end
+    it 'returns a query for Google Maps' do
+      expect(loe_case.google_maps_query).to eq(expected)
     end
   end
 

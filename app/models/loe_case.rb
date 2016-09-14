@@ -9,7 +9,6 @@ class LoeCase < ActiveRecord::Base
     "assignedinspcode" => "assigned_inspector_code",
     "casenotes" => "case_notes",
     "casenumber" => "case_number",
-    "casetype" => "case_type",
     "censustract" => "census_tract",
     "closedate" => "close_date",
     "closereason" => "close_reason",
@@ -24,7 +23,6 @@ class LoeCase < ActiveRecord::Base
     "ownermailzip" => "owner_mailzip",
     "ownername" => "owner_name",
     "ownername2" => "owner_name2",
-    "rentalstatus" => "rental_status",
     "stapt" => "st_apt",
     "stname" => "st_name",
     "stnumber" => "st_number",
@@ -37,6 +35,8 @@ class LoeCase < ActiveRecord::Base
   has_many :violations, -> { order(:case_sakey) }
   belongs_to :case_status
   belongs_to :use_code
+  belongs_to :rental_status
+  belongs_to :case_type
 
   scope :case_number, -> (case_number) { where case_number: case_number }
   scope :entry_date_range, -> (entry_date_range) do
@@ -64,18 +64,28 @@ class LoeCase < ActiveRecord::Base
   scope :open, -> { where case_status_id: CaseStatus.open.id }
   scope :closed, -> { where case_status_id: CaseStatus.closed.id }
   scope :use_code, -> (use_code) { where(use_code_id: use_code) }
+  scope :owner_name, -> (owner_name) { where('upper(owner_name) = ?', owner_name.try(:upcase)) }
+  scope :rental_status, -> (rental_status) { where(rental_status_id: rental_status) }
+  scope :case_type, -> (case_type) { where(case_type_id: case_type) }
 
-  def self.seed
-    Rails.cache.clear
-    Socrata.seed self, Socrata.case_dataset_id
+  def google_maps_query
+    "#{full_address}, #{city}, #{state}"
   end
 
-  def assign_from_socrata(socrata_result)
+  def self.seed(offset=nil, batch_mode=nil)
+    Rails.cache.clear
+    Socrata.seed(self, Socrata.case_dataset_id, offset, batch_mode)
+  end
+
+  def assign_from_socrata(socrata_result, cache=nil)
+    cache ||= {}
     socrata_result.keys.each do |key|
       col = self.class::SOCRATA_ATTRIBUTE_REMAPPING[key] || key
       relations = {
         'casestatus' => CaseStatus,
-        'usecode' => UseCode
+        'usecode' => UseCode,
+        'rentalstatus' => RentalStatus,
+        'casetype' => CaseType
       }
       if relations.keys.include?(col.to_s)
         opts = { name: socrata_result[key].strip }
@@ -98,7 +108,25 @@ class LoeCase < ActiveRecord::Base
           if val.length==4
             val += "/01/01"
           end
-          self[col.to_sym] = Date.parse val
+          begin
+            self[col.to_sym] =  case val
+                                when /^\s*\d+\s+\d+\s+\d{4}\s*$/
+                                  Date.strptime(val,"%m %d %Y")
+                                else
+                                  Date.parse val
+                                end
+          rescue ArgumentError => e
+            dbg = {
+              file: File.basename(__FILE__),
+              line: __LINE__,
+              val: val,
+              col: col,
+              key: key,
+              raw: socrata_result[key]
+            }
+            puts dbg.to_json
+            raise e
+          end
           if self[col.to_sym] > Date.today
             self[col.to_sym] = self[col.to_sym].to_time.advance(years: -100).to_date
           end

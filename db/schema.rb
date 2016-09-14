@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160818010208) do
+ActiveRecord::Schema.define(version: 20160913012022) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +23,14 @@ ActiveRecord::Schema.define(version: 20160818010208) do
   end
 
   add_index "case_statuses", ["name"], name: "index_case_statuses_on_name", unique: true, using: :btree
+
+  create_table "case_types", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "case_types", ["name"], name: "index_case_types_on_name", unique: true, using: :btree
 
   create_table "inspections", force: :cascade do |t|
     t.integer  "loe_case_id"
@@ -65,7 +73,6 @@ ActiveRecord::Schema.define(version: 20160818010208) do
     t.string   "assignment"
     t.text     "case_notes"
     t.integer  "case_number"
-    t.string   "case_type"
     t.string   "census_tract"
     t.datetime "close_date"
     t.string   "close_reason"
@@ -80,7 +87,6 @@ ActiveRecord::Schema.define(version: 20160818010208) do
     t.string   "owner_mailzip"
     t.string   "owner_name"
     t.string   "owner_name2"
-    t.string   "rental_status"
     t.string   "zoning"
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
@@ -97,10 +103,23 @@ ActiveRecord::Schema.define(version: 20160818010208) do
     t.float    "y_coord"
     t.integer  "case_status_id"
     t.integer  "use_code_id"
+    t.integer  "rental_status_id"
+    t.integer  "case_type_id"
   end
 
+  add_index "loe_cases", ["case_number"], name: "index_loe_cases_on_case_number", unique: true, using: :btree
   add_index "loe_cases", ["case_status_id"], name: "index_loe_cases_on_case_status_id", using: :btree
+  add_index "loe_cases", ["case_type_id"], name: "index_loe_cases_on_case_type_id", using: :btree
+  add_index "loe_cases", ["rental_status_id"], name: "index_loe_cases_on_rental_status_id", using: :btree
   add_index "loe_cases", ["use_code_id"], name: "index_loe_cases_on_use_code_id", using: :btree
+
+  create_table "rental_statuses", force: :cascade do |t|
+    t.string   "name",       null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "rental_statuses", ["name"], name: "index_rental_statuses_on_name", unique: true, using: :btree
 
   create_table "use_codes", force: :cascade do |t|
     t.string   "name",       null: false
