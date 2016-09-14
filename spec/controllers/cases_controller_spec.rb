@@ -13,7 +13,7 @@ RSpec.describe CasesController, type: :controller do
     it "responds with 200 OK" do
       get :index, {}, valid_session
       expect(response.code).to eq("200")
-      expect(assigns['cases']).to be_a(LoeCase::ActiveRecord_Relation)
+      expect(assigns['cases']).to be_a(Kaminari::PaginatableArray)
       expect(assigns['cases'].size).to be > 0
       expect(assigns['cases'].size).to eq(expected_count)
     end

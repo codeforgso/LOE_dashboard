@@ -51,7 +51,9 @@ module CasesHelper
   private
 
   def options_for_relation(klass, selected=nil)
-    options_from_collection_for_select klass.all.order(:name), :id, :name, selected
+    Rails.cache.fetch("options_for_relation-#{klass}-#{selected}") do
+      options_from_collection_for_select klass.all.order(:name), :id, :name, selected
+    end
   end
 
 end

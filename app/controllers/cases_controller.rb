@@ -5,10 +5,7 @@ class CasesController < ApplicationController
     params[:filters] ||= {}
     sort = (valid_sorts && [params[:sort]]).first || 'entry_date'
     sort += " #{(['ASC', 'DESC'] && [params[:sort_dir]]).first}"
-    @cases = LoeCase.filter(params[:filters].slice(*valid_filters))
-      .order(sort)
-      .select(select_for_index)
-      .page params[:page]
+    @cases = cases_for_index(params, sort)
   end
 
   def show
@@ -37,6 +34,41 @@ class CasesController < ApplicationController
   end
 
   private
+
+  def cases_for_index(params, sort)
+    params[:page] ||= 1
+    Rails.cache.fetch("cases_index_#{Digest::SHA256.hexdigest(params[:filters].to_yaml)}}_#{params[:page]}_#{sort}") do
+      # An Arel result is not cacheable.  We have to convert our results
+      # to a paginated array so it will be cacheable.
+
+      params[:page] = params[:page].to_i
+
+      # array to fill with results for pagination:
+      #    * need the actual items to show on page view
+      #    * need to pad the array with nil values so it
+      #      will render pagination links
+      arr = []
+
+      # pad the previous pages with nil values
+      arr += Array.new([(params[:page] - 1) * Kaminari.config.default_per_page, 0].max)
+
+
+      cases = LoeCase.filter(params[:filters].slice(*valid_filters))
+        .order(sort)
+        .select(select_for_index)
+        .page(params[:page])
+      # add the page being viewed to arr
+      arr += cases.to_a
+
+      # if there are more pages after the current one, add more nil values
+      if cases.total_count > params[:page] * Kaminari.config.default_per_page
+        arr += Array.new([cases.total_count - (params[:page] * Kaminari.config.default_per_page), 0].max)
+      end
+
+      # paginate
+      Kaminari.paginate_array(arr).page(params[:page])
+    end
+  end
 
   def valid_filters
     [
