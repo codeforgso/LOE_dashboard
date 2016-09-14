@@ -65,6 +65,14 @@
     </div>
   </div>
   <div class="form-group">
+    <label class="col-sm-2 control-label" for="case_type">
+      Case Type
+    </label>
+    <div class="col-sm-10">
+      <%= select_tag 'filters[case_type]', options_for_case_type(params[:filters][:case_type]), include_blank: true, class: 'form-control' %>
+    </div>
+  </div>
+  <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
       <span class="icon-input-btn">
         <%= submit_tag 'Search', "data-disable-with" => "Searching...", class: 'btn btn-primary' %>

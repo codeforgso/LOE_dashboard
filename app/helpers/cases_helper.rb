@@ -8,6 +8,10 @@ module CasesHelper
     options_for_relation RentalStatus, selected
   end
 
+  def options_for_case_type(selected=nil)
+    options_for_relation CaseType, selected
+  end
+
   def sort_dir(attribute)
     if attribute.to_s == params[:sort].to_s
       params[:sort_dir] == 'DESC' ? 'ASC' : 'DESC'

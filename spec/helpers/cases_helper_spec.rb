@@ -13,7 +13,7 @@ require 'nokogiri'
 # end
 RSpec.describe CasesHelper, type: :helper do
 
-  [UseCode, RentalStatus].each do |klass|
+  [UseCode, RentalStatus, CaseType].each do |klass|
     describe "options_for_#{klass.model_name.param_key}" do
       before do
         expected_count.times { create(param) }
