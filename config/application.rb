@@ -22,8 +22,5 @@ module LoeDashboard
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
-
-    # redis
-    config.cache_store = :redis_store, "redis://localhost:6379/#{ENV['REDIS_DATABASE']}/cache", { expires_in: 20.minutes }
   end
 end
