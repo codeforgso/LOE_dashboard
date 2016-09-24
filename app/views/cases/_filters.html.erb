@@ -1,79 +1,29 @@
+<%
+  fields = search_fields
+  column_count = 4
+  group_size = (fields.count / column_count).ceil
+%>
 <h2>Search Filters</h2>
 <%= form_tag(cases_path, method: :get, class: 'form-horizontal') do %>
-  <div class="form-group">
-    <label class="col-sm-2 control-label" for="case_number">
-      Case Number
-    </label>
-    <div class="col-sm-10">
-      <%= text_field_tag 'filters[case_number]', params[:filters][:case_number] %>
+  <% fields.in_groups_of(group_size).each do |group| %>
+    <div class="col-md-<%= 12 / column_count %>">
+      <% group.compact.each do |field| %>
+        <div class="">
+          <div class="form-group">
+            <label class="col-md-4 control-label" for="<%= field[:attr] %>">
+              <%= field[:title] %>
+              <%= "<span class=\"text-muted\">#{field[:sub_title]}</span>".html_safe if field[:sub_title] %>
+            </label>
+            <div class="col-md-8">
+              <%= field[:html] %>
+            </div>
+          </div>
+        </div>
+      <% end %>
     </div>
-  </div>
+  <% end %>
   <div class="form-group">
-    <label class="col-sm-2 control-label" for="start_date">
-      Entry Date (start) <span class="text-muted">(YYYY-MM-DD)</span>
-    </label>
-    <div class="col-sm-10">
-      <%= text_field_tag 'filters[entry_date_range][start_date]', params[:filters][:entry_date_range] ? params[:filters][:entry_date_range][:start_date].try(:strftime, '%Y-%m-%d') : nil, data: { provide: :datepicker, 'date-autoclose': true, 'date-today-highlight': true, 'date-days-of-week-highlighted': '1,2,3,4,5', 'date-format': 'yyyy-mm-dd', 'date-orientation': 'bottom' } %>
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label" for="end_date">
-      Entry Date (end) <span class="text-muted">(YYYY-MM-DD)</span>
-    </label>
-    <div class="col-sm-10">
-      <%= text_field_tag 'filters[entry_date_range][end_date]', params[:filters][:entry_date_range] ? params[:filters][:entry_date_range][:end_date].try(:strftime, '%Y-%m-%d') : nil, data: { provide: :datepicker, 'date-autoclose': true, 'date-today-highlight': true, 'date-days-of-week-highlighted': '1,2,3,4,5', 'date-format': 'yyyy-mm-dd', 'date-orientation': 'bottom' } %>
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label" for="st_name">
-      Street Name
-    </label>
-    <div class="col-sm-10">
-      <%= text_field_tag 'filters[st_name]', params[:filters][:st_name], data: {autocomplete: true, autocomplete_param: :st_name}, autocomplete: :off %>
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label" for="full_address">
-      Address
-    </label>
-    <div class="col-sm-10">
-      <%= text_field_tag 'filters[full_address]', params[:filters][:full_address], data: {autocomplete: true, autocomplete_param: :full_address}, autocomplete: :off %>
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label" for="owner_name">
-      Owner Name
-    </label>
-    <div class="col-sm-10">
-      <%= text_field_tag 'filters[owner_name]', params[:filters][:owner_name], data: {autocomplete: true, autocomplete_param: :owner_name}, autocomplete: :off %>
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label" for="use_code">
-      Use Code
-    </label>
-    <div class="col-sm-10">
-      <%= select_tag 'filters[use_code]', options_for_use_code(params[:filters][:use_code]), include_blank: true, class: 'form-control' %>
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label" for="rental_status">
-      Rental Status
-    </label>
-    <div class="col-sm-10">
-      <%= select_tag 'filters[rental_status]', options_for_rental_status(params[:filters][:rental_status]), include_blank: true, class: 'form-control' %>
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label" for="case_type">
-      Case Type
-    </label>
-    <div class="col-sm-10">
-      <%= select_tag 'filters[case_type]', options_for_case_type(params[:filters][:case_type]), include_blank: true, class: 'form-control' %>
-    </div>
-  </div>
-  <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
+    <div class="col-md-offset-2 col-md-10">
       <span class="icon-input-btn">
         <%= submit_tag 'Search', "data-disable-with" => "Searching...", class: 'btn btn-primary' %>
         <span aria-hidden="true" class="glyphicon glyphicon-search white"></span>
