@@ -16,6 +16,7 @@ RSpec.describe CasesHelper, type: :helper do
   [UseCode, RentalStatus, CaseType].each do |klass|
     describe "options_for_#{klass.model_name.param_key}" do
       before do
+        klass.delete_all
         expected_count.times { create(param) }
       end
       let(:param) { klass.model_name.param_key.to_sym }
@@ -75,9 +76,15 @@ RSpec.describe CasesHelper, type: :helper do
   describe 'case_items' do
     let(:expected) do
       [:case_number, :case_type, :origin, :entry_date].map do |attribute|
+        value = case attribute
+        when :case_type
+          loe_case.send(attribute).try(:name)
+        else
+          loe_case.send(attribute)
+        end
         {
           label: attribute.to_s.titleize,
-          value: loe_case.send(attribute)
+          value: value
         }
       end
     end
@@ -119,6 +126,30 @@ RSpec.describe CasesHelper, type: :helper do
       end
       it 'returns an array of items for #show template' do
         expect(actual).to eq(expected)
+      end
+    end
+  end
+
+  describe 'search_fields' do
+    let(:actual) { helper.search_fields }
+    let(:expected_keys) { [:title, :attr, :html_opts, :value, :html, :param_name] }
+    let(:params) { { filters: { entry_date_range: {} } } }
+    it 'returns an array of options for search field markup' do
+      allow(helper).to receive(:params).and_return(params)
+      expect(actual).to be_an(Array)
+      expect(actual.size).to be > 0
+      actual.each do |item|
+        expect(item).to be_a(Hash)
+        expect((item.keys & expected_keys).sort).to eq(expected_keys.sort)
+      end
+    end
+  end
+
+  [:date_field_opts, :autocomplete_field_opts, :search_date_fields, :search_date_field_value].each do |method|
+
+    describe "#{method}" do
+      it 'is a private method' do
+        expect(helper.private_methods.include?(method)).to eq(true)
       end
     end
   end

@@ -8,10 +8,16 @@
       <a href="#summary" aria-controls="summary" role="tab">Summary</a>
     </li>
     <li role="presentation">
-      <a href="#inspections" aria-controls="inspections" role="tab">Inspections</a>
+      <a href="#inspections" aria-controls="inspections" role="tab">
+        Inspections
+        <span class="badge"><%= @case.inspections.size %></span>
+      </a>
     </li>
     <li role="presentation">
-      <a href="#violations" aria-controls="violations" role="tab">Violations</a>
+      <a href="#violations" aria-controls="violations" role="tab">
+        Violations
+        <span class="badge"><%= @case.violations.size %></span>
+      </a>
     </li>
     <li role="presentation">
       <a href="#details" aria-controls="details" role="tab">Details</a>

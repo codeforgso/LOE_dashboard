@@ -24,7 +24,13 @@ RSpec.describe "cases/show", type: :view do
         assert_select 'div' do
           assert_select 'ul.nav-tabs' do
             items.each do |item|
-              assert_select "li > a[href='##{item}']", text: item.to_s.titleize
+              expected_text = case item
+              when /inspections|violations/
+                /^#{Regexp.escape(item.to_s.titleize)}\s+#{expected_count}$/
+              else
+                item.to_s.titleize
+              end
+              assert_select "li > a[href='##{item}']", text: expected_text
             end
           end
           assert_select 'div.tab-content' do
