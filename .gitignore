@@ -25,3 +25,4 @@ config/initializers/soda-ruby.rb
 
 # Other files to ignore
 *.sublime-workspace
+/lib/tasks/rspec.rake
