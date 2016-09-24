@@ -1,4 +1,4 @@
 <h1>Violation Detail</h1>
 <pre><%= @violation.attributes.to_yaml %></pre>
-<%= link_to 'View Case', case_path(@violation.loe_case_id) %><br />
+<%= link_to 'View Case', case_path(@violation.case_number) %><br />
 <%= link_to 'Browse Violations', violations_path %>

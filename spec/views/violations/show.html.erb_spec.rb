@@ -7,7 +7,7 @@ RSpec.describe "violations/show", type: :view do
 
   it "renders attributes" do
     render
-    assert_select "a[href='#{case_path(@violation.loe_case_id)}']", text: 'View Case'
+    assert_select "a[href='#{case_path(@violation.case_number)}']", text: 'View Case'
     assert_select "a[href='#{violations_path}']"
   end
 end
