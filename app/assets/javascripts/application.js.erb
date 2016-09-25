@@ -136,5 +136,9 @@ App.development_environment = <%= ::Rails.env.development? %>;
   // this is the Turbolinks event to bind to for page refreshes + DOM ready
   $(document).on('page:change', function(e) {
     App.init();
+    if (typeof(ga) !== 'undefined') {
+      ga('set', { page: document.location.pathname });
+      ga('send', 'pageview');
+    }
   });
 })(jQuery);
