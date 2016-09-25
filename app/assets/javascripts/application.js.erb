@@ -138,7 +138,7 @@ App.development_environment = <%= ::Rails.env.development? %>;
     App.init();
     if (typeof(ga) !== 'undefined') {
       ga('set', { page: document.location.pathname });
-      ga('send', 'pageview');
+      // ga('send', 'pageview');
     }
   });
 })(jQuery);
