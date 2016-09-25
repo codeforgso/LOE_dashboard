@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resources :inspections, only: [:show, :index]
   resources :violations, only: [:show, :index]
   resources :pages, only: [:index]
+  get 'application/js_config', controller: :application, action: :js_config
 
   root 'cases#index'
 end

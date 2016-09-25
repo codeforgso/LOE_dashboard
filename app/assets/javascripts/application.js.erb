@@ -27,6 +27,9 @@ var App = window.App || {};
 App.urls = {
   cases: {
     autocomplete: '<%= url_for(autocomplete_cases_path) %>'
+  },
+  application: {
+    config: '<%= url_for(application_js_config_path) %>'
   }
 };
 App.google_maps_api_key = '<%= ENV['GOOGLE_MAPS_API_KEY'] %>';
@@ -66,14 +69,39 @@ App.google_maps_api_key = '<%= ENV['GOOGLE_MAPS_API_KEY'] %>';
   }
 
   App.setup_google_maps = function() {
-    $.each($("[data-google-maps-iframe-wrapper]"), function(i, item) {
-      var item_sel = $(item);
-      var iframe = document.createElement('iframe');
-      iframe.frameBorder=0;
-      iframe.id="randomid";
-      iframe.setAttribute('class', 'google-maps-iframe');
-      iframe.setAttribute("src", "https://www.google.com/maps/embed/v1/place?key="+App.google_maps_api_key+"&q="+item_sel.data('googleMapsQuery'));
-      item_sel.html(iframe);
+    var sel = $("[data-google-maps-iframe-wrapper]");
+    if (sel.length > 0) {
+      // Heroku *sometimes* picks up the API key during `rake assets:precompile`.
+      // We will get it via AJAX as a fallback if it is missing.
+      App.google_maps_api_key = App.google_maps_api_key || '';
+      if (App.google_maps_api_key.toString().match(/[A-Za-z0-9]{4,}/) ) {
+        $.each(sel, function(i, item) {
+          var item_sel = $(item);
+          var iframe = document.createElement('iframe');
+          iframe.frameBorder=0;
+          iframe.id="randomid";
+          iframe.setAttribute('class', 'google-maps-iframe');
+          iframe.setAttribute("src", "https://www.google.com/maps/embed/v1/place?key="+App.google_maps_api_key+"&q="+item_sel.data('googleMapsQuery'));
+          item_sel.html(iframe);
+        });
+      } else {
+        console.log('get config...');
+        App.get_config(App.setup_google_maps);
+      }
+    }
+  }
+
+  App.get_config = function(callback) {
+    $.getJSON(
+      App.urls.application.config
+    ).done(function(data, status, xhr) {
+      App.config = data;
+      App.google_maps_api_key = App.config.google_maps_api_key;
+      if (typeof(callback) === 'function') {
+        callback.call();
+      }
+    }).fail(function(xhr, status, err) {
+      console.log(status, err, xhr);
     });
   }
 

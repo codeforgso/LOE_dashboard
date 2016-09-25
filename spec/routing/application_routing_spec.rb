@@ -7,5 +7,9 @@ RSpec.describe ApplicationController, type: :routing do
       expect(get: '/').to route_to('cases#index')
     end
 
+    it 'routes to js_config' do
+      expect(get: '/application/js_config').to route_to('application#js_config')
+    end
+
   end
 end
