@@ -5,7 +5,8 @@ class ApplicationController < ActionController::Base
 
   def js_config
     render json: {
-      google_maps_api_key: ENV['GOOGLE_MAPS_API_KEY']
+      google_maps_api_key: ENV['GOOGLE_MAPS_API_KEY'],
+      google_analytics_id: ENV['GOOGLE_ANALYTICS_ID']
     }
   end
 end

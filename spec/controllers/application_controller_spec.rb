@@ -7,7 +7,8 @@ RSpec.describe ApplicationController, type: :controller do
   describe "GET #js_config" do
     let(:expected) do
       {
-        google_maps_api_key: ENV['GOOGLE_MAPS_API_KEY']
+        google_maps_api_key: ENV['GOOGLE_MAPS_API_KEY'],
+        google_analytics_id: ENV['GOOGLE_ANALYTICS_ID']
       }.to_json
     end
     it "responds with 200 OK" do
