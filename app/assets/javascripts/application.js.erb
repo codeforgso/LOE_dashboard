@@ -33,12 +33,17 @@ App.urls = {
   }
 };
 App.google_maps_api_key = '<%= ENV['GOOGLE_MAPS_API_KEY'] %>';
+App.google_analytics_id = '<%= ENV['GOOGLE_ANALYTICS_ID'] %>';
+App.development_environment = <%= ::Rails.env.development? %>;
 (function($, undefined) {
   App.init = function() {
     Turbolinks.enableProgressBar();
     App.setup_autocomplete();
     App.setup_tabs();
     App.setup_google_maps();
+    if (!App.development_environment) {
+      App.setup_google_analytics();
+    }
   }
 
   App.setup_autocomplete = function() {
@@ -92,21 +97,48 @@ App.google_maps_api_key = '<%= ENV['GOOGLE_MAPS_API_KEY'] %>';
   }
 
   App.get_config = function(callback) {
-    $.getJSON(
-      App.urls.application.config
-    ).done(function(data, status, xhr) {
-      App.config = data;
-      App.google_maps_api_key = App.config.google_maps_api_key;
+    if (typeof(App.config) === 'undefined') {
+      $.getJSON(
+        App.urls.application.config
+      ).done(function(data, status, xhr) {
+        App.config = data;
+        App.google_maps_api_key = App.config.google_maps_api_key;
+        App.google_analytics_id = App.config.google_analytics_id;
+        if (typeof(callback) === 'function') {
+          callback.call();
+        }
+      }).fail(function(xhr, status, err) {
+        console.log(status, err, xhr);
+      });
+    } else {
       if (typeof(callback) === 'function') {
         callback.call();
       }
-    }).fail(function(xhr, status, err) {
-      console.log(status, err, xhr);
-    });
+    }
+  }
+
+  App.setup_google_analytics = function() {
+    App.google_analytics_id = App.google_analytics_id || '';
+    if (App.google_analytics_id.toString().match(/[A-Za-z0-9]{4,}/) ) {
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', App.google_analytics_id, 'auto');
+      ga('send', 'pageview');
+    } else {
+      console.log('get config...');
+      App.get_config(App.setup_google_analytics);
+    }
   }
 
   // this is the Turbolinks event to bind to for page refreshes + DOM ready
   $(document).on('page:change', function(e) {
     App.init();
+    if (typeof(ga) !== 'undefined') {
+      ga('set', { page: document.location.pathname });
+      // ga('send', 'pageview');
+    }
   });
 })(jQuery);
